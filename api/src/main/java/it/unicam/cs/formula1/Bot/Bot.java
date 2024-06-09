@@ -23,13 +23,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package it.unicam.cs.formula1.GameEngine;
-import it.unicam.cs.formula1.Track.TrackException;
-import java.io.IOException;
+package it.unicam.cs.formula1.Bot;
+import it.unicam.cs.formula1.Position.Position;
 
-public interface GameEngine {
-    void loadGame(String filePath) throws IOException, TrackException;
-    void startRace();
-    void updateRace();
-    void displayStatus();
+public interface Bot {
+    void updatePosition(Position direction);
+    void calculateNextMoves();
 }

@@ -4,6 +4,7 @@
 
 plugins {
     id 'buildlogic.java-application-conventions'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 dependencies {
@@ -14,4 +15,9 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClass = 'it.unicam.cs.formula1.app'
+}
+
+javafx {
+    version = "17"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.web', 'javafx.base' ]
 }

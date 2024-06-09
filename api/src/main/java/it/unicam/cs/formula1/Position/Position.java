@@ -23,13 +23,26 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package it.unicam.cs.formula1.GameEngine;
-import it.unicam.cs.formula1.Track.TrackException;
-import java.io.IOException;
+package it.unicam.cs.formula1.Position;
 
-public interface GameEngine {
-    void loadGame(String filePath) throws IOException, TrackException;
-    void startRace();
-    void updateRace();
-    void displayStatus();
+public record Position(int x, int y) {
+
+    @Override
+    public boolean equals(Object obj) {
+        // Verifica prima se obj è lo stesso riferimento di this
+        if (this == obj)
+            return true;
+        // Verifica se obj è di tipo Position
+        if (obj instanceof Position other) {
+            // Compara le coordinate x e y
+            return this.x == other.x && this.y == other.y;
+        }
+        // Se obj non è di tipo Position, ritorna false
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }
