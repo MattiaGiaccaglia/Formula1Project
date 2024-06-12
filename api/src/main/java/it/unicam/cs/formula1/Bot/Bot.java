@@ -24,9 +24,53 @@
  */
 
 package it.unicam.cs.formula1.Bot;
+
+import it.unicam.cs.formula1.Movement.Movement;
 import it.unicam.cs.formula1.Position.Position;
 
+/**
+ * Represents a bot in the game.
+ * Provides methods to update the bots position, calculate its next moves, and retrieve its current position and name.
+ */
 public interface Bot {
+
+    /**
+     * Updates the bots position based on the specified direction
+     *
+     * @param direction the new position of the bot
+     */
     void updatePosition(Position direction);
+
+    /**
+     * Calculates the bots next moves based on its current position and movement strategy.
+     */
     void calculateNextMoves();
+
+    /**
+     * Returns the current position of the bot.
+     *
+     * @return the current position of the bot
+     */
+    Position getCurrentPosition();
+
+    /**
+     * Returns the previous move of the bot.
+     *
+     * @return the previous move of the bot.
+     */
+    Position getPreviousMove();
+
+    /**
+     * Returns the name of the bot.
+     *
+     * @return the name of the bot
+     */
+    String getName();
+
+    /**
+     * Returns the Movement of the bot.
+     *
+     * @return the Movement of the bot
+     */
+    Movement getMovement();
 }

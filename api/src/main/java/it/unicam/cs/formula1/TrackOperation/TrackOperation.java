@@ -25,62 +25,56 @@
 
 package it.unicam.cs.formula1.TrackOperation;
 
+import it.unicam.cs.formula1.Bot.Bot;
 import it.unicam.cs.formula1.Position.Position;
 
 import java.util.List;
 
 /**
- * Definisce le operazioni per manipolare e verificare posizioni su un tracciato.
- * Questa interfaccia fornisce un contratto per verificare la validità e percorribilità
- * di posizioni e tracciati, nonché per generare posizioni vicine a una data posizione.
+ * Defines operations for manipulating and verifying positions on a track.
+ * Provides methods to check the validity and passability of positions and tracks, and to generate nearby positions.
  */
 public interface TrackOperation {
 
     /**
-     * Verifica se le posizioni specificate sono valide e se i tracciati tra esse sono percorribili.
-     * Questo metodo controlla la validità delle posizioni e verifica la percorribilità del tracciato
-     * tra una posizione e la sua successiva. In particolare, verifica la validità delle prime due posizioni
-     * e controlla se il percorso tra la posizione principale e il primo punto successivo, e tra il primo
-     * e il secondo punto successivo, è percorribile.
+     * Checks if the specified positions are valid and if the tracks between them are passable.
      *
-     * @param mainPoint La posizione principale da cui iniziare il controllo.
-     * @param mainPoint1 La prima posizione successiva da verificare dopo la posizione principale.
-     * @param mainPoint2 La seconda posizione successiva da verificare.
-     * @return {@code true} se tutte le posizioni sono valide e i tracciati tra di loro sono percorribili, altrimenti {@code false}.
+     * @param mainPoint  the main position to check from
+     * @param mainPoint1 the first subsequent position to check after the main position
+     * @param mainPoint2 the second subsequent position to check
+     * @return true if all positions are valid and the tracks between them are passable, false otherwise
      */
     boolean isValidAndPassable(Position mainPoint, Position mainPoint1, Position mainPoint2);
 
     /**
-     * Verifica se un tracciato tra due posizioni è percorribile.
-     * Il controllo viene effettuato verificando se tutte le posizioni tra la posizione di start e quella di arrive
-     * sono valide e percorribili nel tracciato. Il metodo calcola il percorso direttamente connesso tra le due posizioni
-     * utilizzando una linea retta e verifica ciascun punto lungo questa linea.
+     * Checks if a track between two positions is passable.
      *
-     * @param start La posizione di start dalla quale iniziare il controllo.
-     * @param arrive La posizione di arrive alla quale termina il controllo.
-     * @return {@code true} se ogni posizione tra start e arrive è valida e percorribile, altrimenti {@code false}.
+     * @param start  the starting position
+     * @param arrive the ending position
+     * @return true if the track between start and arrive is passable, false otherwise
      */
     boolean checkPassableTrack(Position start, Position arrive);
 
     /**
-     * Calcola e restituisce una lista di posizioni vicine valide alla position specificata.
-     * Genera tutte le posizioni adiacenti (inclusi i punti diagonalmente adiacenti) alla position data,
-     * escludendo la position stessa. Ogni position generata viene verificata per determinare se è valida
-     * all'interno del tracciato. Solo le posizioni valide vengono aggiunte alla lista finale.
+     * Calculates and returns a list of valid nearby positions to the specified position.
      *
-     * @param position La position da cui calcolare gli otto vicini.
-     * @return Una lista di {@link Position} che rappresentano tutte le posizioni valide intorno alla position data.
+     * @param position the position to calculate nearby moves from
+     * @return a list of {@link Position} representing valid nearby positions
      */
     List<Position> calculateNearbyMoves(Position position);
 
     /**
-     * Controlla se la position specificata è valida all'interno del tracciato.
-     * Una position è considerata valida se si trova all'interno dei limiti dimensionali del tracciato
-     * e il valore nella cella corrispondente del tracciato non è zero (0 indica una position non valida).
+     * Checks if the specified position is valid within the track.
      *
-     * @param position La position da verificare.
-     * @return {@code true} se la position è dentro i limiti del tracciato e il punto non è marcato come non valido,
-     *         altrimenti {@code false}.
+     * @param position the position to check
+     * @return true if the position is within the track limits and not marked as invalid, false otherwise
      */
     boolean isValidPosition(Position position);
+
+    /**
+     * Executes a nearby move for the specified bot if the main point is not valid.
+     *
+     * @param bot the bot for which execute the nearby move
+     */
+    void executeNearbyMove(Bot bot);
 }

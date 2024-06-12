@@ -1,78 +1,69 @@
+/*
+ * Copyright (c) 2024 Mattia Giaccaglia
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package it.unicam.cs.formula1.Track;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import it.unicam.cs.formula1.Position.Position;
 
+import java.util.List;
+
+/**
+ * Default implementation of the {@link Track} interface.
+ * Represents an immutable track in the game.
+ */
 public class DefaultTrack implements Track {
-    private int[][] track;
-    private List<Position> start;
-    private List<Position> end;
+    private final int[][] track;
+    private final List<Position> start;
+    private final List<Position> end;
 
-    @Override
-    public void loadTrackFromFile(String filePath) throws TrackException, IOException {
-        Path of = Path.of(filePath);
-        if (!Files.exists(of))
-            throw new NoSuchFileException("File not found: " + filePath);
-        String content = new String(Files.readAllBytes(of));
-        JSONObject jsonObject = new JSONObject(content);
-        JSONArray jsonArray = jsonObject.getJSONArray("track");
-        track = new int[jsonArray.length()][];
-        this.end = new ArrayList<>();
-        this.start = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            String row = jsonArray.getString(i);
-            track[i] = new int[row.length()];
-            for (int j = 0; j < row.length(); j++) {
-                track[i][j] = Character.getNumericValue(row.charAt(j));
-                if (track[i][j] == 2)
-                    this.start.add(new Position(i, j));
-                else if (track[i][j] == 3)
-                    this.end.add(new Position(i, j));
-            }
-        }
-        if (this.start.isEmpty() || this.end.isEmpty())
-            throw new TrackException("Start or finish positions are missing in the track.");
+    /**
+     * Constructor of DefaultTrack
+     *
+     * @param trackLayout the 2D array representing the track layout
+     * @param startPositions the list of starting positions
+     * @param endPositions the list of ending positions
+     */
+    public DefaultTrack(int[][] trackLayout, List<Position> startPositions, List<Position> endPositions) {
+        this.track = trackLayout;
+        this.start = List.copyOf(startPositions);
+        this.end = List.copyOf(endPositions);
     }
 
     @Override
-    public void printTrack() {
-        for (int[] row : track) {
-            for (int cell : row)
-                System.out.print(cell + " ");
-            System.out.println();
-        }
-    }
-
-    public int[][] getTrack() {
+    public int[][] getTrackLayout() {
         return track;
     }
 
-    public void setTrack(int[][] track) {
-        this.track = track;
+    @Override
+    public List<Position> getStartPositions() {
+        return this.start;
     }
 
-    public List<Position> getStart() {
-        return start;
-    }
-
-    public void setStart(List<Position> start) {
-        this.start = start;
-    }
-
-    public List<Position> getEnd() {
-        return end;
-    }
-
-    public void setEnd(List<Position> end) {
-        this.end = end;
+    @Override
+    public List<Position> getEndPositions() {
+        return this.end;
     }
 }
 

@@ -23,52 +23,35 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package it.unicam.cs.formula1.GameEngine;
+package it.unicam.cs.formula1.app.RaceManager;
 
 import it.unicam.cs.formula1.Bot.Bot;
-import it.unicam.cs.formula1.Track.Track;
 
 import java.util.List;
 
 /**
- * Represents the game engine responsible for managing the game.
- * Provides methods to load the game, start the race, update the race status, and retrieve track and bot information.
+ * Interface representing the manager for the race.
+ * Provides methods to start the race, check for race completion, and determine if the race is finished.
  */
-public interface GameEngine {
+public interface RaceManager {
 
     /**
-     * Starts the race and manages the game loop until the race is over.
+     * Starts the race and manages the race updates.
      */
     void startRace();
 
     /**
-     * Checks if the race is over.
+     * Checks if the race is completed by evaluating the positions of the bots.
+     * If a bot reaches the end position, a dialog is displayed to indicate the race is finished.
      *
-     * @return true if the race is over, false otherwise
+     * @param bots the list of bots participating in the race
      */
-    Boolean isRaceOver();
+    void checkRaceCompletion(List<Bot> bots);
 
     /**
-     * Updates the race status, typically by calculating the next moves for all bots.
-     */
-    void updateRace();
-
-    /**
-     * Displays the current status of the race, including the positions of all bots.
-     */
-    void displayStatus();
-
-    /**
-     * Returns the track on which the game is being played.
+     * Determines if the race is finished.
      *
-     * @return the track
+     * @return true if the race is finished, false otherwise
      */
-    Track getTrack();
-
-    /**
-     * Returns the list of bots participating in the game.
-     *
-     * @return the list of bots
-     */
-    List<Bot> getBots();
+    boolean isRaceFinished();
 }

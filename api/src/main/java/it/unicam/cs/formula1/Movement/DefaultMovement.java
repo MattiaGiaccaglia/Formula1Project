@@ -24,11 +24,21 @@
  */
 
 package it.unicam.cs.formula1.Movement;
+
+
 import it.unicam.cs.formula1.Position.Position;
 
+/**
+ * Default implementation of the {@link Movement} interface.
+ * Provides methods to accelerate, decelerate, and calculate the main point for movement.
+ */
 public class DefaultMovement implements Movement {
     private static final int MAX_SPEED = 4;
     private int speed;
+
+    /**
+     * Constructs a new DefaultMovement with an initial speed of 1.
+     */
     public DefaultMovement(){
         this.speed = 1;
     }
@@ -36,7 +46,7 @@ public class DefaultMovement implements Movement {
     @Override
     public Position accelerate(Position mainPoint, Position previousMove) {
         if (speed < MAX_SPEED) {
-            speed++;  // Incrementa la velocità prima dell'uso
+            speed++;
             return new Position(mainPoint.x() + Integer.signum(previousMove.x()), mainPoint.y() + Integer.signum(previousMove.y()));
         }
         return mainPoint;
@@ -45,7 +55,7 @@ public class DefaultMovement implements Movement {
     @Override
     public Position decelerate(Position mainPoint, Position previousMove) {
         if (speed > 1) {
-            speed--; // Decrementa la velocità
+            speed--;
             return new Position(mainPoint.x() - Integer.signum(previousMove.x()), mainPoint.y() - Integer.signum(previousMove.y()));
         }
         return mainPoint;
@@ -55,5 +65,13 @@ public class DefaultMovement implements Movement {
     public Position calculateMainPoint(Position actualPosition, Position previousMove) {
         return new Position(actualPosition.x() + previousMove.x(),
                 actualPosition.y() + previousMove.y());
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 }

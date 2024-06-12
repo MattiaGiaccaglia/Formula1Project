@@ -24,29 +24,29 @@
  */
 
 package it.unicam.cs.formula1.TrackOperation;
+
+import it.unicam.cs.formula1.Bot.Bot;
 import it.unicam.cs.formula1.Position.Position;
-import it.unicam.cs.formula1.Track.DefaultTrack;
+import it.unicam.cs.formula1.Track.Track;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Random;
 
 /**
- * Implementa {@link TrackOperation} per fornire dettagli concreti su come
- * le operazioni di verifica e manipolazione delle posizioni su un defaultTrack vengono eseguite.
- *
- * @author Mattia Giaccaglia
+ * Implements {@link TrackOperation} to provide concrete details on how
+ * to check and manipulate positions on a {@link Track}.
  */
  public class DefaultTrackOperation implements TrackOperation {
-    private DefaultTrack defaultTrack;
+    private final Track track;
 
     /**
-     * Costruisce una nuova istanza di OperazioniTracciato con il defaultTrack specificato.
+     * Constructs a new instance of DefaultTrackOperation with the specified track
      *
-     * @param defaultTrack il defaultTrack su cui operare.
+     * @param track the track to operate on
      */
-    public DefaultTrackOperation(DefaultTrack defaultTrack){
-        this.defaultTrack = defaultTrack;
+    public DefaultTrackOperation(Track track) {
+        this.track = track;
     }
 
     @Override
@@ -58,14 +58,16 @@ import java.util.stream.IntStream;
 
     @Override
     public boolean checkPassableTrack(Position start, Position arrive) {
-        int xStart = start.x();
-        int yStart = start.y();
-        int xEnd = arrive.x();
-        int yEnd = arrive.y();
-        int dx = xEnd - xStart;
-        int dy = yEnd - yStart;
-        return IntStream.rangeClosed(0, Math.max(Math.abs(dx), Math.abs(dy)))
-                .allMatch(i -> isValidPosition(new Position(xStart + i * Integer.signum(dx), yStart + i * Integer.signum(dy))));
+        int dx = Math.abs(arrive.x() - start.x()), dy = Math.abs(arrive.y() - start.y());
+        int steps = Math.max(dx, dy);
+
+        for (int i = 1; i <= steps; i++) {
+            int intermediateX = start.x() + i * Integer.signum(arrive.x() - start.x());
+            int intermediateY = start.y() + i * Integer.signum(arrive.y() - start.y());
+            if (!isValidPosition(new Position(intermediateX, intermediateY)))
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -85,15 +87,17 @@ import java.util.stream.IntStream;
     public boolean isValidPosition(Position position) {
         int x = position.x();
         int y = position.y();
-        int[][] track = defaultTrack.getTrack();
-        return x >= 0 && y >= 0 && x < track.length && y < track[x].length && track[x][y] != 0;
+        int[][] trackLayout = track.getTrackLayout();
+        return x >= 0 && y >= 0 && x < trackLayout.length && y < trackLayout[x].length && trackLayout[x][y] != 0;
     }
 
-    public DefaultTrack getTracciato() {
-        return defaultTrack;
+    @Override
+    public void executeNearbyMove(Bot bot){
+        Position mainPoint = bot.getMovement().calculateMainPoint(bot.getCurrentPosition(), bot.getPreviousMove());
+        List<Position> mosseVicine = calculateNearbyMoves(bot.getCurrentPosition());
+        mosseVicine.removeIf(mossa -> !calculateNearbyMoves(mainPoint).contains(mossa));
+        Random random = new Random();
+        bot.updatePosition(mosseVicine.get(random.nextInt(mosseVicine.size())));
     }
 
-    public void setTracciato(DefaultTrack defaultTrack) {
-        this.defaultTrack = defaultTrack;
-    }
 }

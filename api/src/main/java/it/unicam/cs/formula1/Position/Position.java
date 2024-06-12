@@ -25,19 +25,17 @@
 
 package it.unicam.cs.formula1.Position;
 
+/**
+ * Immutable class representing a position with x and y coordinates.
+ */
 public record Position(int x, int y) {
 
     @Override
     public boolean equals(Object obj) {
-        // Verifica prima se obj è lo stesso riferimento di this
         if (this == obj)
             return true;
-        // Verifica se obj è di tipo Position
-        if (obj instanceof Position other) {
-            // Compara le coordinate x e y
+        if (obj instanceof Position other)
             return this.x == other.x && this.y == other.y;
-        }
-        // Se obj non è di tipo Position, ritorna false
         return false;
     }
 

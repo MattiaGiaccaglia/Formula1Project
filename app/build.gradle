@@ -14,7 +14,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'it.unicam.cs.formula1.app'
+    mainClass = 'it.unicam.cs.formula1.app.App'
 }
 
 javafx {

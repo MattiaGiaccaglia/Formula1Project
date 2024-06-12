@@ -23,11 +23,19 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package it.unicam.cs.formula1.app.SimulationGui.RaceDisplay;
+package it.unicam.cs.formula1.Bot;
 
-import javafx.scene.layout.Pane;
+/**
+ * Exception class representing errors related to the bot configuration.
+ */
+public class BotException extends Exception {
 
-public interface RaceDisplay {
-    void displayTrack(Pane root);
-    void updateBotPositions(Pane root);
+    /**
+     * Constructs a new BotException with the specified detail message
+     *
+     * @param message the detail message
+     */
+    public BotException(String message) {
+        super(message);
+    }
 }

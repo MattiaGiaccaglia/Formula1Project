@@ -23,35 +23,28 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package it.unicam.cs.formula1.Track;
+package it.unicam.cs.formula1;
 
 import it.unicam.cs.formula1.Position.Position;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-/**
- * Represents a track in the game.
- * Provides methods to retrieve the track layout, get start and end positions.
- */
-public interface Track {
-    /**
-     * Returns the layout of the track as a 2D array.
-     *
-     * @return a 2D array representing the track layout
-     */
-    int[][] getTrackLayout();
+public class PositionTest {
 
-    /**
-     * Returns the list of start positions on the track.
-     *
-     * @return a list of start positions
-     */
-    List<Position> getStartPositions();
+    @Test
+    public void testEquals() {
+        Position position1 = new Position(1, 2);
+        Position position2 = new Position(1, 2);
+        Position position3 = new Position(3, 4);
+        assertEquals(position1, position2);
+        assertNotEquals(position1, position3);
+    }
 
-    /**
-     * Returns the list of end positions on the track.
-     *
-     * @return a list of end positions
-     */
-    List<Position> getEndPositions();
+    @Test
+    public void testToString() {
+        Position position = new Position(1, 2);
+        assertEquals("(1, 2)", position.toString());
+    }
 }

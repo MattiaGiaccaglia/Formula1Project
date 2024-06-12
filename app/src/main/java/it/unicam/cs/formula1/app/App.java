@@ -22,14 +22,17 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package it.unicam.cs.formula1.app;
 
+import it.unicam.cs.formula1.Bot.BotException;
 import it.unicam.cs.formula1.GameEngine.DefaultGameEngine;
+import it.unicam.cs.formula1.GameEngine.GameEngine;
 import it.unicam.cs.formula1.Track.TrackException;
-import it.unicam.cs.formula1.app.SimulationGui.RaceDisplay.DefaultRaceDisplay;
-import it.unicam.cs.formula1.app.SimulationGui.RaceDisplay.RaceDisplay;
-import it.unicam.cs.formula1.app.SimulationGui.RaceManager.DefaultRaceManager;
-import it.unicam.cs.formula1.app.SimulationGui.RaceManager.RaceManager;
+import it.unicam.cs.formula1.app.RaceDisplay.RaceDisplay;
+import it.unicam.cs.formula1.app.RaceManager.RaceManager;
+import it.unicam.cs.formula1.app.RaceDisplay.DefaultRaceDisplay;
+import it.unicam.cs.formula1.app.RaceManager.DefaultRaceManager;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -37,11 +40,25 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
+/**
+ * Main class for the race simulation GUI.
+ * Sets up the GUI components, initializes the game engine, and starts the race.
+ */
 public class App extends Application {
+
+    /**
+     * Starts the JavaFX application and initializes the race simulation GUI.
+     *
+     * @param primaryStage the primary stage for this application
+     * @throws IOException if an I/O error occurs during game loading
+     * @throws TrackException if there is an error with the track configuration
+     * @throws BotException if there are issues with the bot configuration
+     */
     @Override
-    public void start(Stage primaryStage) throws IOException, TrackException {
+    public void start(Stage primaryStage) throws IOException, TrackException, BotException {
         VBox root = new VBox(10);
         Scene scene = new Scene(root);
         root.setAlignment(Pos.TOP_CENTER);
@@ -51,17 +68,15 @@ public class App extends Application {
         Pane racePane = new Pane();
         root.getChildren().add(racePane);
 
-        DefaultGameEngine defaultGameEngine = new DefaultGameEngine();
-        defaultGameEngine.loadGame("TracciatoPercorso1.json");
+        GameEngine gameEngine = new DefaultGameEngine("../TrackRace.json");
 
-        RaceDisplay raceDisplay = new DefaultRaceDisplay(defaultGameEngine);
-        RaceManager raceManager = new DefaultRaceManager(defaultGameEngine, raceDisplay, racePane);
+        RaceDisplay raceDisplay = new DefaultRaceDisplay(gameEngine);
+        RaceManager raceManager = new DefaultRaceManager(gameEngine, raceDisplay, racePane);
         raceDisplay.displayTrack(racePane);
 
         Button startButton = new Button("Start race");
         startButton.setOnAction(event -> raceManager.startRace());
         root.getChildren().add(startButton);
-
         primaryStage.show();
     }
 

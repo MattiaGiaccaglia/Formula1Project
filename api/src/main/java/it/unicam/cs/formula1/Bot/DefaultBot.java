@@ -25,28 +25,36 @@
 
 package it.unicam.cs.formula1.Bot;
 
-import it.unicam.cs.formula1.Movement.DefaultMovement;
+
+import it.unicam.cs.formula1.Movement.Movement;
 import it.unicam.cs.formula1.Position.Position;
-import it.unicam.cs.formula1.Track.DefaultTrack;
-import it.unicam.cs.formula1.TrackOperation.DefaultTrackOperation;
 import it.unicam.cs.formula1.TrackOperation.TrackOperation;
 
-import java.util.List;
-import java.util.Random;
-
+/**
+ * Default implementation of the {@link Bot} interface.
+ * Provides methods to update the bots position and calculate next moves.
+ */
 public class DefaultBot implements Bot {
-    private String name;
-    private Position actualPosition;
-    private final DefaultMovement defaultMovement;
+    private final String name;
+    private final Movement movement;
     private final TrackOperation trackOperation;
+    private Position actualPosition;
     private Position previousMove;
 
-    public DefaultBot(String name, Position startPosition, DefaultTrack defaultTrack) {
+    /**
+     * Constructs a new DefaultBot with the specified name, starting position, movement, track operation, and random number generator.
+     *
+     * @param name            the name of the bot
+     * @param startPosition   the starting position of the bot
+     * @param movement        the movement strategy for the bot
+     * @param trackOperation  the track operation for the bot
+     */
+    public DefaultBot(String name, Position startPosition, Movement movement, TrackOperation trackOperation) {
         this.name = name;
         this.actualPosition = startPosition;
-        this.defaultMovement = new DefaultMovement();
-        this.trackOperation = new DefaultTrackOperation(defaultTrack);
-        this.previousMove = new Position(0,0);
+        this.previousMove = new Position(0, 0);
+        this.movement = movement;
+        this.trackOperation = trackOperation;
     }
 
     @Override
@@ -58,56 +66,36 @@ public class DefaultBot implements Bot {
 
     @Override
     public void calculateNextMoves() {
-        Position mainPoint = defaultMovement.calculateMainPoint(actualPosition, previousMove);
-        Position nextMainPoint1 = defaultMovement.calculateMainPoint(mainPoint, previousMove);
-        Position nextMainPoint2 = defaultMovement.calculateMainPoint(nextMainPoint1, previousMove);
+        Position mainPoint = movement.calculateMainPoint(actualPosition, previousMove);
+        Position nextMainPoint1 = movement.calculateMainPoint(mainPoint, previousMove);
+        Position nextMainPoint2 = movement.calculateMainPoint(nextMainPoint1, previousMove);
         if (actualPosition.equals(mainPoint) || !trackOperation.isValidPosition(mainPoint)) {
-            eseguiMossaVicina();
+            trackOperation.executeNearbyMove(this);
             return;
         }
         Position newPosition = trackOperation.isValidAndPassable(mainPoint, nextMainPoint1, nextMainPoint2)
-                ? defaultMovement.accelerate(mainPoint, previousMove)
-                : defaultMovement.decelerate(mainPoint, previousMove);
+                ? movement.accelerate(mainPoint, previousMove)
+                : movement.decelerate(mainPoint, previousMove);
         updatePosition(newPosition);
     }
-    private void eseguiMossaVicina() {
-        Position mainPoint = defaultMovement.calculateMainPoint(actualPosition, previousMove);
-        List<Position> mosseVicine = trackOperation.calculateNearbyMoves(actualPosition);
-        // Filtra le mosse vicine direttamente nella lista originale
-        mosseVicine.removeIf(mossa -> !trackOperation.calculateNearbyMoves(mainPoint).contains(mossa));
-        Random random = new Random();
-        this.updatePosition(mosseVicine.get(random.nextInt(mosseVicine.size())));
+    @Override
+    public Movement getMovement() {
+        return movement;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Position getActualPosition() {
-        return actualPosition;
-    }
-
-    public void setActualPosition(Position actualPosition) {
-        this.actualPosition = actualPosition;
-    }
-
-    public DefaultMovement getDefaultMovement() {
-        return defaultMovement;
-    }
-
-    public TrackOperation getTrackOperation() {
-        return trackOperation;
-    }
-
+    @Override
     public Position getPreviousMove() {
         return previousMove;
     }
 
-    public void setPreviousMove(Position previousMove) {
-        this.previousMove = previousMove;
+    @Override
+    public Position getCurrentPosition() {
+        return this.actualPosition;
     }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
 }

@@ -25,90 +25,86 @@
 
 package it.unicam.cs.formula1.GameEngine;
 
-import it.unicam.cs.formula1.Bot.DefaultBot;
+import it.unicam.cs.formula1.Bot.Bot;
+import it.unicam.cs.formula1.Bot.BotException;
+import it.unicam.cs.formula1.Bot.BotFactory;
 import it.unicam.cs.formula1.Position.Position;
-import it.unicam.cs.formula1.Track.DefaultTrack;
+import it.unicam.cs.formula1.Track.Track;
 import it.unicam.cs.formula1.Track.TrackException;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import it.unicam.cs.formula1.Track.TrackFactory;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-public class DefaultGameEngine implements GameEngine{
-    private DefaultTrack defaultTrack;
-    private List<DefaultBot> defaultBots;
+/**
+ * Default implementation of the {@link GameEngine} interface.
+ * Provides methods to load, start, and manage the race.
+ */
+public class DefaultGameEngine implements GameEngine {
+    private final Track track;
+    private final List<Bot> bots;
     private Runnable onRaceUpdated;
+    private final Set<Position> finishPositions;
 
-    public DefaultGameEngine() {
-        defaultTrack = new DefaultTrack();
-        defaultBots = new ArrayList<>();
-    }
-
-    @Override
-    public void loadGame(String filePath) throws IOException, TrackException {
-        String content = new String(Files.readAllBytes(Paths.get(filePath)));
-        JSONObject jsonObject = new JSONObject(content);
-        // Carica il defaultTrack
-        defaultTrack.loadTrackFromFile(filePath);
-        // Carica i bot
-        JSONArray jsonArrayBots = jsonObject.getJSONArray("bots");
-        if(jsonArrayBots.length() > defaultTrack.getStart().size())
-            throw new IOException("The number of bots inserted exceeds the starting slots.");
-        for (int i = 0; i < jsonArrayBots.length(); i++) {
-            JSONObject botJson = jsonArrayBots.getJSONObject(i);
-            defaultBots.add(new DefaultBot(botJson.getString("name"), defaultTrack.getStart().get(i), defaultTrack));
-        }
+    /**
+     * Constructs a new DefaultGameEngine with the specified file path.
+     * Initializes the track and bots based on the configuration file.
+     *
+     * @param filePath the path to the track configuration file
+     * @throws TrackException if there is an error with the track configuration
+     * @throws IOException if an I/O error occurs reading from the file
+     * @throws BotException if there are issues with the bot configuration
+     */
+    public DefaultGameEngine(String filePath) throws TrackException, IOException, BotException {
+        this.track = TrackFactory.loadTrackFromConfig(filePath);
+        this.bots = BotFactory.createBotsFromConfig(filePath, track);
+        this.finishPositions = new HashSet<>(track.getEndPositions());
     }
 
     @Override
     public void startRace() {
         System.out.println("Race started!");
-        int numeroStep = 0;
-        Set<Position> posizioniArrivo = new HashSet<>(defaultTrack.getEnd());
-        while (true) {
+        while (!isRaceOver()) {
             updateRace();
             if (onRaceUpdated != null)
-                onRaceUpdated.run();  // Chiama il callback per aggiornare l'UI
+                onRaceUpdated.run();
             displayStatus();
-            numeroStep++;
-            Optional<DefaultBot> botVincitore = defaultBots.stream()
-                    .filter(defaultBot -> posizioniArrivo.contains(defaultBot.getActualPosition()))
-                    .findFirst();
-            if (botVincitore.isPresent()) {
-                System.out.println("Bot " + botVincitore.get().getName() + " won the race after " + numeroStep + " steps");
-                break;
-            }
         }
     }
 
     @Override
+    public Boolean isRaceOver(){
+        Optional<Bot> winningBot = bots.stream()
+                .filter(bot -> finishPositions.contains(bot.getCurrentPosition()))
+                .findFirst();
+        if (winningBot.isPresent()) {
+            System.out.println("Bot " + winningBot.get().getName() + " won the race!");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void updateRace() {
-        for (DefaultBot defaultBot : defaultBots)
-            defaultBot.calculateNextMoves();
+        for (Bot bot : bots)
+            bot.calculateNextMoves();
     }
 
     @Override
     public void displayStatus() {
-        for (DefaultBot defaultBot : defaultBots)
-            System.out.println("Bot " + defaultBot.getName() + ", is in the position: " + defaultBot.getActualPosition());
+        for (Bot bot : bots)
+            System.out.println("Bot " + bot.getName() + ", is in position: " + bot.getCurrentPosition());
     }
 
-
-    public DefaultTrack getDefaultTrack() {
-        return defaultTrack;
+    @Override
+    public Track getTrack() {
+        return track;
     }
-
-    public List<DefaultBot> getDefaultBots() {
-        return defaultBots;
-    }
-
-    public Runnable getOnRaceUpdated() {
-        return onRaceUpdated;
-    }
-
-    public void setOnRaceUpdated(Runnable onRaceUpdated) {
-        this.onRaceUpdated = onRaceUpdated;
+    @Override
+    public List<Bot> getBots() {
+        return bots;
     }
 }

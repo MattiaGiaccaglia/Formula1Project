@@ -27,8 +27,36 @@ package it.unicam.cs.formula1.Movement;
 
 import it.unicam.cs.formula1.Position.Position;
 
+/**
+ * Defines the movement strategies for a bot.
+ * Provides methods to accelerate, decelerate, and calculate the main point for movement.
+ */
 public interface Movement {
+
+    /**
+     * Accelerates the movement from the main point based on the previous move.
+     *
+     * @param mainPoint the main point from which to accelerate
+     * @param previousMove the previous move made
+     * @return the new position after acceleration
+     */
     Position accelerate(Position mainPoint, Position previousMove);
+
+    /**
+     * Decelerates the movement from the main point based on the previous move.
+     *
+     * @param mainPoint the main point from which to decelerate
+     * @param previousMove the previous move made
+     * @return the new position after deceleration
+     */
     Position decelerate(Position mainPoint, Position previousMove);
+
+    /**
+     * Calculates the main point for movement based on the actual position and the previous move.
+     *
+     * @param actualPosition the actual position of the bot
+     * @param previousMove the previous move made
+     * @return the new main point position
+     */
     Position calculateMainPoint(Position actualPosition, Position previousMove);
 }
