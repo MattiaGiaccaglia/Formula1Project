@@ -82,6 +82,10 @@ public class DefaultRaceManager implements RaceManager {
 
     @Override
     public void checkRaceCompletion(List<Bot> bots) {
+        if (bots.isEmpty()) {
+            Platform.runLater(this::showAllBotsEliminatedDialog);
+            return;
+        }
         for (Bot bot : bots)
             if (gameEngine.getTrack().getEndPositions().contains(bot.getCurrentPosition())) {
                 Platform.runLater(() -> showRaceFinishedDialog(bot));
@@ -92,7 +96,8 @@ public class DefaultRaceManager implements RaceManager {
     @Override
     public boolean isRaceFinished() {
         return gameEngine.getBots().stream()
-                .anyMatch(defaultBot -> gameEngine.getTrack().getEndPositions().contains(defaultBot.getCurrentPosition()));
+                .anyMatch(defaultBot -> gameEngine.getTrack().getEndPositions().contains(defaultBot.getCurrentPosition()))
+                || gameEngine.getBots().isEmpty();
     }
 
     /**
@@ -105,6 +110,17 @@ public class DefaultRaceManager implements RaceManager {
         alert.setTitle("Race finished!");
         alert.setHeaderText(null);
         alert.setContentText("Bot " + defaultBot.getName() + " won the race!");
+        alert.showAndWait();
+    }
+
+    /**
+     * Displays a dialog indicating that all bots have been eliminated and the race is over.
+     */
+    private void showAllBotsEliminatedDialog() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Race finished!");
+        alert.setHeaderText(null);
+        alert.setContentText("All bots have been eliminated. The race is over.");
         alert.showAndWait();
     }
 }

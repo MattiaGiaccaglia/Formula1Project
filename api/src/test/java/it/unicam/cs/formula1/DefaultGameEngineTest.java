@@ -49,9 +49,9 @@ class DefaultGameEngineTest {
         String JsonContent = """
                 {
                    "track":[
-                   "212",
-                   "101",
-                   "313"
+                   "212000",
+                   "101101",
+                   "313000"
                    ],
                   "bots": [
                       {"name": "Bot1"},
@@ -73,7 +73,7 @@ class DefaultGameEngineTest {
     }
 
     @Test
-    void testStartRace(){
+    void testStartRace() throws InterruptedException {
         gameEngine.startRace();
     }
 
@@ -93,6 +93,13 @@ class DefaultGameEngineTest {
         assertEquals(position, bot.getCurrentPosition());
         gameEngine.updateRace();
         assertNotEquals(position, bot.getCurrentPosition());
+
+        bot.updatePosition(new Position(1, 5));
+        gameEngine.updateRace();
+        assertTrue(bot.getEliminated());
+        String message = "Bot Bot1, was eliminated from the race due to a crash.";
+        assertEquals(message, "Bot " + bot.getName() + ", was eliminated from the race due to a crash.");
+
     }
 
     @Test

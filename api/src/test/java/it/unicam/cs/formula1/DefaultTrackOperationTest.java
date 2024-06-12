@@ -43,8 +43,7 @@ class DefaultTrackOperationTest {
 
     @BeforeEach
     void setUp() {
-        int[][] trackLayout = {
-                {2, 1, 2},
+        int[][] trackLayout = {{2, 1, 2},
                 {1, 0, 1},
                 {3, 1, 3}
         };

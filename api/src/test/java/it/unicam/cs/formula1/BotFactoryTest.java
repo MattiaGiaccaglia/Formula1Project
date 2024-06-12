@@ -99,9 +99,7 @@ class BotFactoryTest {
             file.write(JsonContent);
         }
         Track track = TrackFactory.loadTrackFromConfig(jsonFilePath);
-        Exception exception = assertThrows(BotException.class, () -> {
-            BotFactory.createBotsFromConfig(jsonFilePath, track);
-        });
+        Exception exception = assertThrows(BotException.class, () -> BotFactory.createBotsFromConfig(jsonFilePath, track));
         String expectedMessage = "The number of bots inserted exceeds the starting slots.";
         String message = exception.getMessage();
         assertTrue(message.contains(expectedMessage));
@@ -124,9 +122,7 @@ class BotFactoryTest {
             file.write(JsonContent);
         }
         Track track = TrackFactory.loadTrackFromConfig(jsonFilePath);
-        Exception exception = assertThrows(BotException.class, () -> {
-            BotFactory.createBotsFromConfig(jsonFilePath, track);
-        });
+        Exception exception = assertThrows(BotException.class, () -> BotFactory.createBotsFromConfig(jsonFilePath, track));
         String expectedMessage = "The configuration file does not contain the key 'bots'.";
         String message = exception.getMessage();
         assertTrue(message.contains(expectedMessage));

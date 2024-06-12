@@ -34,10 +34,7 @@ import it.unicam.cs.formula1.Track.TrackException;
 import it.unicam.cs.formula1.Track.TrackFactory;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Default implementation of the {@link GameEngine} interface.
@@ -77,6 +74,10 @@ public class DefaultGameEngine implements GameEngine {
 
     @Override
     public Boolean isRaceOver(){
+        if (bots.isEmpty()) {
+            System.out.println("All bots have been eliminated. The race is over.");
+            return true;
+        }
         Optional<Bot> winningBot = bots.stream()
                 .filter(bot -> finishPositions.contains(bot.getCurrentPosition()))
                 .findFirst();
@@ -89,8 +90,15 @@ public class DefaultGameEngine implements GameEngine {
 
     @Override
     public void updateRace() {
-        for (Bot bot : bots)
+        Iterator<Bot> iterator = bots.iterator();
+        while (iterator.hasNext()) {
+            Bot bot = iterator.next();
             bot.calculateNextMoves();
+            if (bot.getEliminated()) {
+                iterator.remove();
+                System.out.println("Bot " + bot.getName() + ", was eliminated from the race due to a crash.");
+            }
+        }
     }
 
     @Override

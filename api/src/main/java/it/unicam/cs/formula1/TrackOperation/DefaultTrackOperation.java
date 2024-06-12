@@ -96,6 +96,10 @@ import java.util.Random;
         Position mainPoint = bot.getMovement().calculateMainPoint(bot.getCurrentPosition(), bot.getPreviousMove());
         List<Position> mosseVicine = calculateNearbyMoves(bot.getCurrentPosition());
         mosseVicine.removeIf(mossa -> !calculateNearbyMoves(mainPoint).contains(mossa));
+        if(mosseVicine.isEmpty()){
+            bot.isEliminated(true);
+            return;
+        }
         Random random = new Random();
         bot.updatePosition(mosseVicine.get(random.nextInt(mosseVicine.size())));
     }

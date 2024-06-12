@@ -38,6 +38,7 @@ public class DefaultBot implements Bot {
     private final String name;
     private final Movement movement;
     private final TrackOperation trackOperation;
+    private boolean eliminated;
     private Position actualPosition;
     private Position previousMove;
 
@@ -55,6 +56,7 @@ public class DefaultBot implements Bot {
         this.previousMove = new Position(0, 0);
         this.movement = movement;
         this.trackOperation = trackOperation;
+        this.eliminated = false;
     }
 
     @Override
@@ -96,6 +98,16 @@ public class DefaultBot implements Bot {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public void isEliminated(boolean eliminated) {
+        this.eliminated = eliminated;
+    }
+
+    @Override
+    public boolean getEliminated() {
+        return eliminated;
     }
 
 }

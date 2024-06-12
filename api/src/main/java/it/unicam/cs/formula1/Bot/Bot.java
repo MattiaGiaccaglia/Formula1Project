@@ -73,4 +73,18 @@ public interface Bot {
      * @return the Movement of the bot
      */
     Movement getMovement();
+
+    /**
+     * Sets the elimination status of the bot.
+     *
+     * @param eliminated the elimination status to set
+     */
+    void isEliminated(boolean eliminated);
+
+    /**
+     * Returns the elimination status of the bot.
+     *
+     * @return true if the bot is eliminated, false otherwise
+     */
+    boolean getEliminated();
 }

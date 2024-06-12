@@ -42,7 +42,7 @@ public interface RaceManager {
 
     /**
      * Checks if the race is completed by evaluating the positions of the bots.
-     * If a bot reaches the end position, a dialog is displayed to indicate the race is finished.
+     * Displays a dialog if a bot has reached the finish position or if all bots are eliminated.
      *
      * @param bots the list of bots participating in the race
      */

@@ -45,7 +45,15 @@ public interface RaceDisplay {
     void displayTrack(Pane root);
 
     /**
-     * Updates the positions of the bots on the specified pane.
+     * Creates a circle representing the specified bot
+     *
+     * @param bot the bot for which to create a circle
+     * @return a circle representing the bot
+     */
+    Circle createCircleForBot(Bot bot);
+
+    /**
+     * Updates the positions of the bots on the specified pane
      *
      * @param root the pane on which to update bot positions
      */
@@ -60,18 +68,10 @@ public interface RaceDisplay {
     void updateCirclePosition(Circle circle, Position position);
 
     /**
-     * Creates a circle representing the specified bot.
-     *
-     * @param bot the bot for which to create a circle
-     * @return a circle representing the bot
-     */
-    Circle createCircleForBot(Bot bot);
-
-    /**
      * Creates a rectangle representing a grid cell with the specified value at the given coordinates.
      *
      * @param cellValue the value of the grid cell
-     * @param x the x-coordinate of the grid cell
+     * @param x the x-coordinate of the grid cel
      * @param y the y-coordinate of the grid cell
      * @return a rectangle representing the grid cell
      */

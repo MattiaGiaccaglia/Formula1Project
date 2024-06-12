@@ -50,6 +50,7 @@ public interface GameEngine {
 
     /**
      * Updates the race status, typically by calculating the next moves for all bots.
+     * ALso eliminates bots that have crashed during the race.
      */
     void updateRace();
 
