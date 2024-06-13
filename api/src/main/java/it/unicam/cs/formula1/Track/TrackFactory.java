@@ -25,7 +25,6 @@
 
 package it.unicam.cs.formula1.Track;
 
-
 import it.unicam.cs.formula1.Position.Position;
 import org.json.JSONArray;
 import org.json.JSONObject;

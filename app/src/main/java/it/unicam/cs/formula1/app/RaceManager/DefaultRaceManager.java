@@ -34,6 +34,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Default implementation of the {@link RaceManager} interface.
@@ -60,24 +63,20 @@ public class DefaultRaceManager implements RaceManager {
     }
 
     /**
-     * Starts the race and manages race updates using an {@link AnimationTimer}.
+     * Starts the race and manages the race by scheduling updates at fixed intervals.
      */
     @Override
     public void startRace() {
-        if (timer != null)
-            timer.stop(); // Ferma il timer se è già in esecuzione
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                gameEngine.updateRace();
-                raceDisplay.updateBotPositions(root);
-                if (isRaceFinished()) {
-                    stop();
-                    checkRaceCompletion(gameEngine.getBots());
-                }
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable raceTask = () -> {
+            gameEngine.updateRace();
+            Platform.runLater(() -> raceDisplay.updateBotPositions(root));
+            if (isRaceFinished()) {
+                scheduler.shutdown();
+                Platform.runLater(() -> checkRaceCompletion(gameEngine.getBots()));
             }
         };
-        timer.start();
+        scheduler.scheduleAtFixedRate(raceTask, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     @Override

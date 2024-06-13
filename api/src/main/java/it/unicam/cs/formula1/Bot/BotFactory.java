@@ -25,7 +25,6 @@
 
 package it.unicam.cs.formula1.Bot;
 
-
 import it.unicam.cs.formula1.Movement.DefaultMovement;
 import it.unicam.cs.formula1.Movement.Movement;
 import it.unicam.cs.formula1.Position.Position;

@@ -41,7 +41,6 @@ import java.util.Map;
  * Handles the visual representation of the race, including displaying the track and updating bot positions.
  */
 public class DefaultRaceDisplay implements RaceDisplay {
-
     private final GameEngine gameEngine;
     private final Map<Bot, Circle> botCircles = new HashMap<>();
 

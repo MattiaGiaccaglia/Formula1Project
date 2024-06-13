@@ -35,6 +35,9 @@ import it.unicam.cs.formula1.Track.TrackFactory;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Default implementation of the {@link GameEngine} interface.
@@ -43,7 +46,6 @@ import java.util.*;
 public class DefaultGameEngine implements GameEngine {
     private final Track track;
     private final List<Bot> bots;
-    private Runnable onRaceUpdated;
     private final Set<Position> finishPositions;
 
     /**
@@ -64,12 +66,16 @@ public class DefaultGameEngine implements GameEngine {
     @Override
     public void startRace() {
         System.out.println("Race started!");
-        while (!isRaceOver()) {
-            updateRace();
-            if (onRaceUpdated != null)
-                onRaceUpdated.run();
-            displayStatus();
-        }
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable raceTask = () -> {
+            if (isRaceOver())
+                scheduler.shutdown();
+            else {
+                updateRace();
+                displayStatus();
+            }
+        };
+        scheduler.scheduleAtFixedRate(raceTask, 0, 500, TimeUnit.MILLISECONDS);
     }
 
     @Override

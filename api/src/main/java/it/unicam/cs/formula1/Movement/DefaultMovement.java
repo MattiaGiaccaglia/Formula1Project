@@ -25,7 +25,6 @@
 
 package it.unicam.cs.formula1.Movement;
 
-
 import it.unicam.cs.formula1.Position.Position;
 
 /**
