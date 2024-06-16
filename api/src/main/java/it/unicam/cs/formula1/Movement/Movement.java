@@ -35,6 +35,7 @@ public interface Movement {
 
     /**
      * Accelerates the movement from the main point based on the previous move.
+     * The new position is calculated by moving from the main point in the direction of the previous move, adjusted by the current speed.
      *
      * @param mainPoint the main point from which to accelerate
      * @param previousMove the previous move made
@@ -44,6 +45,7 @@ public interface Movement {
 
     /**
      * Decelerates the movement from the main point based on the previous move.
+     * The new position is calculated by moving from the main point in the opposite direction of the previous move, adjusted by the current speed.
      *
      * @param mainPoint the main point from which to decelerate
      * @param previousMove the previous move made

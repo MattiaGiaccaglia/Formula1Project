@@ -26,11 +26,9 @@
 package it.unicam.cs.formula1.Bot;
 
 import it.unicam.cs.formula1.Movement.DefaultMovement;
-import it.unicam.cs.formula1.Movement.Movement;
 import it.unicam.cs.formula1.Position.Position;
 import it.unicam.cs.formula1.Track.*;
 import it.unicam.cs.formula1.TrackOperation.DefaultTrackOperation;
-import it.unicam.cs.formula1.TrackOperation.TrackOperation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -47,22 +45,8 @@ import java.util.List;
 public class BotFactory {
 
     /**
-     * Factory method to create a default bot with the specified name, starting position, and track.
-     *
-     * @param name          the name of the bot
-     * @param startPosition the starting position of the bot
-     * @param track         the track on which the bot will operate
-     * @return a new instance of DefaultBot
-     */
-    public static DefaultBot createDefaultBot(String name, Position startPosition, Track track) {
-        Movement movement = new DefaultMovement();
-        TrackOperation trackOperation = new DefaultTrackOperation(track);
-        return new DefaultBot(name, startPosition, movement, trackOperation);
-    }
-
-    /**
      * Creates a list of bots from a configuration file.
-     * The configuration file should be a JSON file with bot details.
+     * This method reads the configuration, validates it, and constructs bots accordingly.
      *
      * @param configPath the path to the configuration file
      * @param track      the track on which the bots will operate
@@ -71,21 +55,54 @@ public class BotFactory {
      * @throws BotException if there are issues with the bot configuration
      */
     public static List<Bot> createBotsFromConfig(String configPath, Track track) throws IOException, BotException {
-        List<Bot> bots = new ArrayList<>();
-        String content = new String(Files.readAllBytes(Paths.get(configPath)));
+        String content = Files.readString(Paths.get(configPath));
+        JSONArray jsonArray = parseAndValidateBotConfig(content);
+        return instantiateBots(jsonArray, track);
+    }
+
+    /**
+     * Creates a default bot with the specified name, starting position, and track.
+     * Utilizes default implementations for movement and track operations.
+     *
+     * @param name          the name of the bot
+     * @param startPosition the starting position of the bot
+     * @param track         the track on which the bot will operate
+     * @return a new instance of DefaultBot
+     */
+    private static Bot createDefaultBot(String name, Position startPosition, Track track) {
+        return new DefaultBot(name, startPosition, new DefaultMovement(), new DefaultTrackOperation(track));
+    }
+
+    /**
+     * Parses the JSON content and validates the presence of 'bots' key.
+     *
+     * @param content JSON content as String
+     * @return JSONArray of bot configurations
+     * @throws BotException if the required 'bots' key is missing
+     */
+    private static JSONArray parseAndValidateBotConfig(String content) throws BotException {
         JSONObject jsonObject = new JSONObject(content);
         if (!jsonObject.has("bots"))
             throw new BotException("The configuration file does not contain the key 'bots'.");
-        JSONArray jsonArray = jsonObject.getJSONArray("bots");
+        return jsonObject.getJSONArray("bots");
+    }
+
+    /**
+     * Instantiates bots based on the JSON array and the given track.
+     *
+     * @param jsonArray the JSON array containing bot details
+     * @param track     the track on which the bots will operate
+     * @return a list of instantiated bots
+     * @throws BotException if there are more bots than starting positions
+     */
+    private static List<Bot> instantiateBots(JSONArray jsonArray, Track track) throws BotException {
+        List<Bot> bots = new ArrayList<>();
         int startPositionsSize = track.getStartPositions().size();
-        if(jsonArray.length() > startPositionsSize)
-            throw new BotException("The number of bots inserted exceeds the starting slots.");
+        if (jsonArray.length() > startPositionsSize)
+            throw new BotException("The number of bots exceeds the available starting positions.");
         for (int i = 0; i < jsonArray.length() && i < startPositionsSize; i++) {
             JSONObject botJson = jsonArray.getJSONObject(i);
-            String name = botJson.getString("name");
-            Position startPosition = track.getStartPositions().get(i);
-            Bot bot = createDefaultBot(name, startPosition, track);
-            bots.add(bot);
+            bots.add(createDefaultBot(botJson.getString("name"), track.getStartPositions().get(i), track));
         }
         return bots;
     }

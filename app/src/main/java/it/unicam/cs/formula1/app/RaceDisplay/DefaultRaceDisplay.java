@@ -42,15 +42,17 @@ import java.util.Map;
  */
 public class DefaultRaceDisplay implements RaceDisplay {
     private final GameEngine gameEngine;
-    private final Map<Bot, Circle> botCircles = new HashMap<>();
+    private final Map<Bot, Circle> botCircles;
 
     /**
-     * Constructs a new DefaultRaceDisplay with the specified game engine.
+     * Constructor for DefaultRaceDisplay.
+     * Initializes the map to track each bot associated Circle for visualization.
      *
      * @param gameEngine the game engine managing the race logic
      */
     public DefaultRaceDisplay(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
+        this.botCircles = new HashMap<>();
     }
 
     @Override
@@ -66,13 +68,9 @@ public class DefaultRaceDisplay implements RaceDisplay {
     @Override
     public void updateBotPositions(Pane root) {
         for (Bot bot : gameEngine.getBots()) {
-            Circle circle = botCircles.get(bot);
-            if (circle == null) {
-                circle = createCircleForBot(bot);
-                root.getChildren().add(circle);
-                botCircles.put(bot, circle);
-            }
+            Circle circle = botCircles.computeIfAbsent(bot, this::createCircleForBot);
             updateCirclePosition(circle, bot.getCurrentPosition());
+            ensureCircleInPane(circle, root);
         }
     }
 
@@ -93,5 +91,11 @@ public class DefaultRaceDisplay implements RaceDisplay {
     @Override
     public Circle createCircleForBot(Bot bot) {
         return new Circle(bot.getCurrentPosition().y() * 20 + 10, bot.getCurrentPosition().x() * 20 + 10, 10, Color.BLUE);
+    }
+
+    @Override
+    public void ensureCircleInPane(Circle circle, Pane root) {
+        if (!root.getChildren().contains(circle))
+            root.getChildren().add(circle);
     }
 }

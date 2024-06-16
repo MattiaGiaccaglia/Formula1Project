@@ -42,7 +42,8 @@ import java.util.List;
 public class TrackFactory {
 
     /**
-     * Factory method to create a DefaultTrack instance by loading the track from a file.
+     * Loads a track configuration from a specified file and creates a DefaultTrack object.
+     * This method handles the process of reading the file, parsing the JSON content, and validating the necessary data.
      *
      * @param filePath the path to the track configuration file
      * @return a new DefaultTrack instance representing the loaded track
@@ -50,14 +51,22 @@ public class TrackFactory {
      * @throws IOException if an I/O error occurs reading from the file
      */
     public static DefaultTrack loadTrackFromConfig(String filePath) throws TrackException, IOException {
-        Path of = Path.of(filePath);
-        if (!Files.exists(of))
-            throw new NoSuchFileException("File not found: " + filePath);
-        String content = new String(Files.readAllBytes(of));
+        String content = readFileContent(filePath);
         JSONObject jsonObject = new JSONObject(content);
-        if(!jsonObject.has("track"))
-            throw new TrackException("The configuration file does not contain the key 'track'.");
-        JSONArray jsonArray = jsonObject.getJSONArray("track");
+        validateJSONContent(jsonObject);
+        Track track = parseTrackLayout(jsonObject.getJSONArray("track"));
+        validatePositions(track.getStartPositions(), track.getEndPositions());
+        return new DefaultTrack(track.getTrackLayout(), track.getStartPositions(), track.getEndPositions());
+    }
+
+    /**
+     * Parses the JSON array representing a track layout into a DefaultTrack object.
+     * Extracts the track layout, start positions, and end positions from the JSON array.
+     *
+     * @param jsonArray the JSON array containing the track layout data
+     * @return a DefaultTrack instance with initialized layout and positions
+     */
+    private static DefaultTrack parseTrackLayout(JSONArray jsonArray) {
         int[][] trackLayout = new int[jsonArray.length()][];
         List<Position> startPositions = new ArrayList<>();
         List<Position> endPositions = new ArrayList<>();
@@ -66,15 +75,49 @@ public class TrackFactory {
             trackLayout[i] = new int[row.length()];
             for (int j = 0; j < row.length(); j++) {
                 trackLayout[i][j] = Character.getNumericValue(row.charAt(j));
-                if (trackLayout[i][j] == 2)
-                    startPositions.add(new Position(i, j));
-                else if (trackLayout[i][j] == 3)
-                    endPositions.add(new Position(i, j));
+                if (trackLayout[i][j] == 2) startPositions.add(new Position(i, j));
+                else if (trackLayout[i][j] == 3) endPositions.add(new Position(i, j));
             }
         }
+        return new DefaultTrack(trackLayout, startPositions, endPositions);
+    }
+
+    /**
+     * Reads the entire content of a file specified by the file path.
+     *
+     * @param filePath the path to the file to be read
+     * @return the content of the file as a String
+     * @throws IOException if the file does not exist or cannot be read
+     */
+    private static String readFileContent(String filePath) throws IOException {
+        Path path = Path.of(filePath);
+        if (!Files.exists(path))
+            throw new NoSuchFileException("File not found: " + filePath);
+        return new String(Files.readAllBytes(path));
+    }
+
+    /**
+     * Validates that the provided JSON object contains the necessary 'track' key.
+     *
+     * @param jsonObject the JSON object to validate
+     * @throws TrackException if the required key is missing
+     */
+    private static void validateJSONContent(JSONObject jsonObject) throws TrackException {
+        if (!jsonObject.has("track"))
+            throw new TrackException("The configuration file does not contain the required key: '" + "track.");
+    }
+
+    /**
+     * Validates that the list of start and end positions are not empty.
+     * Throws an exception if either list is empty, indicating incomplete or invalid track data.
+     *
+     * @param startPositions the list of start positions on the track
+     * @param endPositions the list of end positions on the track
+     * @throws TrackException if start or finish positions are missing
+     */
+    private static void validatePositions(List<Position> startPositions, List<Position> endPositions) throws TrackException {
         if (startPositions.isEmpty() || endPositions.isEmpty())
             throw new TrackException("Start or finish positions are missing in the track.");
-        return new DefaultTrack(trackLayout, startPositions, endPositions);
     }
 }
 

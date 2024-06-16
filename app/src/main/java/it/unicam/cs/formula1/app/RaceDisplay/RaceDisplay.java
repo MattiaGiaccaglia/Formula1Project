@@ -45,7 +45,7 @@ public interface RaceDisplay {
     void displayTrack(Pane root);
 
     /**
-     * Creates a circle representing the specified bot
+     * Creates a visual Circle representation for a Bot.
      *
      * @param bot the bot for which to create a circle
      * @return a circle representing the bot
@@ -76,4 +76,12 @@ public interface RaceDisplay {
      * @return a rectangle representing the grid cell
      */
     Rectangle createRectangleForGrid(int cellValue, int x, int y);
+
+    /**
+     * Ensures that a Circle is present on the specified Pane.
+     *
+     * @param circle the Circle to check and add to the Pane if necessary
+     * @param root the Pane that should contain the Circle
+     */
+    void ensureCircleInPane(Circle circle, Pane root);
 }

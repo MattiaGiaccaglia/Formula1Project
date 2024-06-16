@@ -38,6 +38,7 @@ public interface TrackOperation {
 
     /**
      * Checks if the specified positions are valid and if the tracks between them are passable.
+     * This involves checking both individual positions for validity and ensuring there are no obstructions between consecutive positions.
      *
      * @param mainPoint  the main position to check from
      * @param mainPoint1 the first subsequent position to check after the main position
@@ -47,7 +48,7 @@ public interface TrackOperation {
     boolean isValidAndPassable(Position mainPoint, Position mainPoint1, Position mainPoint2);
 
     /**
-     * Checks if a track between two positions is passable.
+     * Checks if a track between two positions is passable by stepping through the path and validating each intermediate position.
      *
      * @param start  the starting position
      * @param arrive the ending position
@@ -57,6 +58,7 @@ public interface TrackOperation {
 
     /**
      * Calculates and returns a list of valid nearby positions to the specified position.
+     * This method considers all adjacent positions and filters out those that are invalid or obstructed.
      *
      * @param position the position to calculate nearby moves from
      * @return a list of {@link Position} representing valid nearby positions
@@ -65,6 +67,7 @@ public interface TrackOperation {
 
     /**
      * Checks if the specified position is valid within the track.
+     * A position is considered valid if it is within the track boundaries and not marked as an obstacle (0).
      *
      * @param position the position to check
      * @return true if the position is within the track limits and not marked as invalid, false otherwise
@@ -72,7 +75,8 @@ public interface TrackOperation {
     boolean isValidPosition(Position position);
 
     /**
-     * Executes a nearby move for the specified bot if the main point is not valid.
+     * Executes a nearby move for the specified bot if the main point is not valid or if the bot is unable to move directly to a valid position.
+     * If no valid moves are available, the bot is eliminated.
      *
      * @param bot the bot for which execute the nearby move
      */

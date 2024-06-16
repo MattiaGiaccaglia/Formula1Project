@@ -28,7 +28,6 @@ package it.unicam.cs.formula1.app.RaceManager;
 import it.unicam.cs.formula1.Bot.Bot;
 import it.unicam.cs.formula1.GameEngine.GameEngine;
 import it.unicam.cs.formula1.app.RaceDisplay.RaceDisplay;
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
@@ -39,32 +38,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Default implementation of the {@link RaceManager} interface.
+ * Represents a record-based implementation of the {@link RaceManager} interface.
  * Manages the race by starting the race, checking for race completion, and determining if the race is finished.
+ * Utilizes a {@link GameEngine} to manage game logic, a {@link RaceDisplay} for visualizing the race, and a {@link Pane} as the display container.
+ *
+ * @param gameEngine the game engine managing the game logic
+ * @param raceDisplay the display for visualizing the race
+ * @param root the pane on which to display the race
  */
-public class DefaultRaceManager implements RaceManager {
+public record DefaultRaceManager(GameEngine gameEngine, RaceDisplay raceDisplay, Pane root) implements RaceManager {
 
-    private final GameEngine gameEngine;
-    private final RaceDisplay raceDisplay;
-    private AnimationTimer timer;
-    private final Pane root;
-
-    /**
-     * Constructs a new DefaultRaceManager with the specified game engine, race display, and pane.
-     *
-     * @param gameEngine the game engine managing the game logic
-     * @param raceDisplay the display for visualizing the race
-     * @param root the pane on which to display the race
-     */
-    public DefaultRaceManager(GameEngine gameEngine, RaceDisplay raceDisplay, Pane root) {
-        this.gameEngine = gameEngine;
-        this.raceDisplay = raceDisplay;
-        this.root = root;
-    }
-
-    /**
-     * Starts the race and manages the race by scheduling updates at fixed intervals.
-     */
     @Override
     public void startRace() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -109,7 +92,8 @@ public class DefaultRaceManager implements RaceManager {
         alert.setTitle("Race finished!");
         alert.setHeaderText(null);
         alert.setContentText("Bot " + defaultBot.getName() + " won the race!");
-        alert.showAndWait();
+        alert.setOnHidden(evt -> Platform.exit());
+        alert.show();
     }
 
     /**
@@ -120,6 +104,7 @@ public class DefaultRaceManager implements RaceManager {
         alert.setTitle("Race finished!");
         alert.setHeaderText(null);
         alert.setContentText("All bots have been eliminated. The race is over.");
-        alert.showAndWait();
+        alert.setOnHidden(evt -> Platform.exit());
+        alert.show();
     }
 }

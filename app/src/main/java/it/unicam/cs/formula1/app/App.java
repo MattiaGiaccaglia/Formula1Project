@@ -75,7 +75,7 @@ public class App extends Application {
         raceDisplay.displayTrack(racePane);
 
         Button startButton = new Button("Start race");
-        startButton.setOnAction(event -> raceManager.startRace());
+        startButton.setOnAction(event -> {raceManager.startRace(); startButton.setDisable(true); });
         root.getChildren().add(startButton);
         primaryStage.show();
     }

@@ -36,7 +36,8 @@ import java.util.List;
 public interface RaceManager {
 
     /**
-     * Starts the race and manages the race updates.
+     * Starts and manages the race process, updating the race state periodically and checking for completion.
+     * Schedules and executes race updates and display refreshes at fixed intervals
      */
     void startRace();
 

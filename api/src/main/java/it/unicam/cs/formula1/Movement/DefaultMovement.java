@@ -62,8 +62,7 @@ public class DefaultMovement implements Movement {
 
     @Override
     public Position calculateMainPoint(Position actualPosition, Position previousMove) {
-        return new Position(actualPosition.x() + previousMove.x(),
-                actualPosition.y() + previousMove.y());
+        return new Position(actualPosition.x() + previousMove.x(), actualPosition.y() + previousMove.y());
     }
 
     public int getSpeed() {

@@ -47,6 +47,7 @@ public class DefaultGameEngine implements GameEngine {
     private final Track track;
     private final List<Bot> bots;
     private final Set<Position> finishPositions;
+    private int turn;
 
     /**
      * Constructs a new DefaultGameEngine with the specified file path.
@@ -61,6 +62,7 @@ public class DefaultGameEngine implements GameEngine {
         this.track = TrackFactory.loadTrackFromConfig(filePath);
         this.bots = BotFactory.createBotsFromConfig(filePath, track);
         this.finishPositions = new HashSet<>(track.getEndPositions());
+        this.turn = 0;
     }
 
     @Override
@@ -96,19 +98,20 @@ public class DefaultGameEngine implements GameEngine {
 
     @Override
     public void updateRace() {
-        Iterator<Bot> iterator = bots.iterator();
-        while (iterator.hasNext()) {
-            Bot bot = iterator.next();
+        List<Bot> botEliminated = new ArrayList<>();
+        for (Bot bot : bots) {
             bot.calculateNextMoves();
             if (bot.getEliminated()) {
-                iterator.remove();
+                botEliminated.add(bot);
                 System.out.println("Bot " + bot.getName() + ", was eliminated from the race due to a crash.");
             }
         }
+        bots.removeAll(botEliminated);
     }
 
     @Override
     public void displayStatus() {
+        System.out.println("\nTurn number: " + turn++);
         for (Bot bot : bots)
             System.out.println("Bot " + bot.getName() + ", is in position: " + bot.getCurrentPosition());
     }
