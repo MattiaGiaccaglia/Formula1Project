@@ -35,23 +35,21 @@ public interface Movement {
 
     /**
      * Accelerates the movement from the main point based on the previous move.
-     * The new position is calculated by moving from the main point in the direction of the previous move, adjusted by the current speed.
      *
-     * @param mainPoint the main point from which to accelerate
+     * @param actualPosition the actual position of the bot
      * @param previousMove the previous move made
      * @return the new position after acceleration
      */
-    Position accelerate(Position mainPoint, Position previousMove);
+    Position accelerate(Position actualPosition, Position previousMove);
 
     /**
      * Decelerates the movement from the main point based on the previous move.
-     * The new position is calculated by moving from the main point in the opposite direction of the previous move, adjusted by the current speed.
      *
-     * @param mainPoint the main point from which to decelerate
+     * @param actualPosition the actual position of the bot
      * @param previousMove the previous move made
      * @return the new position after deceleration
      */
-    Position decelerate(Position mainPoint, Position previousMove);
+    Position decelerate(Position actualPosition, Position previousMove);
 
     /**
      * Calculates the main point for movement based on the actual position and the previous move.

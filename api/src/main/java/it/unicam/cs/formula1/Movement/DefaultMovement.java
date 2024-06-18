@@ -68,10 +68,6 @@ public class DefaultMovement implements Movement {
         return new Position(actualPosition.getX() + previousMove.getX(), actualPosition.getY() + previousMove.getY());
     }
 
-    public int getSpeed() {
-        return speed;
-    }
-
     public void setSpeed(int speed) {
         this.speed = speed;
     }

@@ -104,7 +104,7 @@ public class TrackFactory {
      */
     private static void validateJSONContent(JSONObject jsonObject) throws TrackException {
         if (!jsonObject.has("track"))
-            throw new TrackException("The configuration file does not contain the required key: '" + "track.");
+            throw new TrackException("The configuration file does not contain the key 'track'.");
     }
 
     /**

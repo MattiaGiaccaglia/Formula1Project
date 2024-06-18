@@ -99,7 +99,7 @@ class BotFactoryTest {
         }
         Track track = TrackFactory.loadTrackFromConfig(jsonFilePath);
         Exception exception = assertThrows(BotException.class, () -> BotFactory.createBotsFromConfig(jsonFilePath, track));
-        String expectedMessage = "The number of bots inserted exceeds the starting slots.";
+        String expectedMessage = "The number of bots exceeds the available starting positions.";
         String message = exception.getMessage();
         assertTrue(message.contains(expectedMessage));
         Files.delete(Paths.get(jsonFilePath));
