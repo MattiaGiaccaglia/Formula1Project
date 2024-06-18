@@ -43,7 +43,8 @@ public class DefaultMovement implements Movement {
     }
 
     @Override
-    public Position accelerate(Position mainPoint, Position previousMove) {
+    public Position accelerate(Position actualPosition, Position previousMove) {
+        Position mainPoint = calculateMainPoint(actualPosition, previousMove);
         if (speed < MAX_SPEED) {
             speed++;
             return new Position(mainPoint.x() + Integer.signum(previousMove.x()), mainPoint.y() + Integer.signum(previousMove.y()));
@@ -52,17 +53,19 @@ public class DefaultMovement implements Movement {
     }
 
     @Override
-    public Position decelerate(Position mainPoint, Position previousMove) {
+    public Position decelerate(Position actualPosition, Position previousMove) {
+        Position mainPoint = calculateMainPoint(actualPosition, previousMove);
         if (speed > 1) {
             speed--;
-            return new Position(mainPoint.x() - Integer.signum(previousMove.x()), mainPoint.y() - Integer.signum(previousMove.y()));
+            Position position = new Position(mainPoint.x() - Integer.signum(previousMove.x()), mainPoint.y() - Integer.signum(previousMove.y()));
+            if(!position.equals(actualPosition)) return position;
         }
         return mainPoint;
     }
 
     @Override
     public Position calculateMainPoint(Position actualPosition, Position previousMove) {
-        return new Position(actualPosition.x() + previousMove.x(), actualPosition.y() + previousMove.y());
+        return new Position(actualPosition.getX() + previousMove.getX(), actualPosition.getY() + previousMove.getY());
     }
 
     public int getSpeed() {

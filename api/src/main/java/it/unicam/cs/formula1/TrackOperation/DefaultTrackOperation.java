@@ -34,20 +34,12 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Implements {@link TrackOperation} to provide concrete details on how
- * to check and manipulate positions on a {@link Track}.
+ * Represents a record-based implementation of the {@link TrackOperation} interface.
+ * Provide concrete details on how to check and manipulate positions on a {@link Track}.
+ *
+ * @param track The track on which operations are performed.
  */
- public class DefaultTrackOperation implements TrackOperation {
-    private final Track track;
-
-    /**
-     * Constructs a new instance of DefaultTrackOperation with the specified track
-     *
-     * @param track the track to operate on
-     */
-    public DefaultTrackOperation(Track track) {
-        this.track = track;
-    }
+public record DefaultTrackOperation(Track track) implements TrackOperation {
 
     @Override
     public boolean isValidAndPassable(Position mainPoint, Position mainPoint1, Position mainPoint2) {
@@ -58,12 +50,11 @@ import java.util.Random;
 
     @Override
     public boolean checkPassableTrack(Position start, Position arrive) {
-        int dx = Math.abs(arrive.x() - start.x()), dy = Math.abs(arrive.y() - start.y());
+        int dx = Math.abs(arrive.getX() - start.getX()), dy = Math.abs(arrive.getY() - start.getY());
         int steps = Math.max(dx, dy);
-
         for (int i = 1; i <= steps; i++) {
-            int intermediateX = start.x() + i * Integer.signum(arrive.x() - start.x());
-            int intermediateY = start.y() + i * Integer.signum(arrive.y() - start.y());
+            int intermediateX = start.getX() + i * Integer.signum(arrive.getX() - start.getX());
+            int intermediateY = start.getY() + i * Integer.signum(arrive.getY() - start.getY());
             if (!isValidPosition(new Position(intermediateX, intermediateY)))
                 return false;
         }
@@ -76,32 +67,38 @@ import java.util.Random;
         for (int dx = -1; dx <= 1; dx++)
             for (int dy = -1; dy <= 1; dy++)
                 if (dx != 0 || dy != 0) {
-                    Position nuovoPunto = new Position(position.x() + dx, position.y() + dy);
-                    if (isValidPosition(nuovoPunto))
-                        mosseVicine.add(nuovoPunto);
+                    Position newPoint = new Position(position.getX() + dx, position.getY() + dy);
+                    if (isValidPosition(newPoint))
+                        mosseVicine.add(newPoint);
                 }
         return mosseVicine;
     }
 
     @Override
     public boolean isValidPosition(Position position) {
-        int x = position.x();
-        int y = position.y();
+        int x = position.getX();
+        int y = position.getY();
         int[][] trackLayout = track.getTrackLayout();
         return x >= 0 && y >= 0 && x < trackLayout.length && y < trackLayout[x].length && trackLayout[x][y] != 0;
     }
 
     @Override
-    public void executeNearbyMove(Bot bot){
-        Position mainPoint = bot.getMovement().calculateMainPoint(bot.getCurrentPosition(), bot.getPreviousMove());
-        List<Position> mosseVicine = calculateNearbyMoves(bot.getCurrentPosition());
-        mosseVicine.removeIf(mossa -> !calculateNearbyMoves(mainPoint).contains(mossa));
-        if(mosseVicine.isEmpty()){
+    public void executeNearbyMove(Bot bot) {
+        Position currentPosition = bot.getCurrentPosition();
+        Position mainPoint = bot.getMovement().calculateMainPoint(currentPosition, bot.getPreviousMove());
+        List<Position> validMoves = calculateNearbyMoves(mainPoint).stream()
+                .filter(move -> !move.equals(currentPosition))
+                .filter(calculateNearbyMoves(currentPosition)::contains)
+                .toList();
+        if (validMoves.isEmpty()) {
             bot.isEliminated(true);
             return;
         }
-        Random random = new Random();
-        bot.updatePosition(mosseVicine.get(random.nextInt(mosseVicine.size())));
+        bot.updatePosition(validMoves.get(new Random().nextInt(validMoves.size())));
     }
 
+    @Override
+    public Track track() {
+        return track;
+    }
 }

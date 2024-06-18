@@ -46,7 +46,6 @@ public class BotFactory {
 
     /**
      * Creates a list of bots from a configuration file.
-     * This method reads the configuration, validates it, and constructs bots accordingly.
      *
      * @param configPath the path to the configuration file
      * @param track      the track on which the bots will operate
@@ -62,7 +61,6 @@ public class BotFactory {
 
     /**
      * Creates a default bot with the specified name, starting position, and track.
-     * Utilizes default implementations for movement and track operations.
      *
      * @param name          the name of the bot
      * @param startPosition the starting position of the bot

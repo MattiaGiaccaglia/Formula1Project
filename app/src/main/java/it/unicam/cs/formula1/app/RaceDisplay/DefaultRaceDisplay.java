@@ -76,8 +76,8 @@ public class DefaultRaceDisplay implements RaceDisplay {
 
     @Override
     public void updateCirclePosition(Circle circle, Position position) {
-        circle.setCenterX(position.y() * 20 + 10);
-        circle.setCenterY(position.x() * 20 + 10);
+        circle.setCenterX(position.getY() * 20 + 10);
+        circle.setCenterY(position.getX() * 20 + 10);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class DefaultRaceDisplay implements RaceDisplay {
 
     @Override
     public Circle createCircleForBot(Bot bot) {
-        return new Circle(bot.getCurrentPosition().y() * 20 + 10, bot.getCurrentPosition().x() * 20 + 10, 10, Color.BLUE);
+        return new Circle(bot.getCurrentPosition().getY() * 20 + 10, bot.getCurrentPosition().getX() * 20 + 10, 10, Color.BLUE);
     }
 
     @Override

@@ -62,12 +62,12 @@ public class DefaultTrackTest {
     @Test
     public void testGetStartPositions() {
         assertEquals(startPositions, track.getStartPositions());
-        assertEquals(2, track.getTrackLayout()[startPositions.get(0).x()][startPositions.get(0).y()]);
+        assertEquals(2, track.getTrackLayout()[startPositions.get(0).getX()][startPositions.get(0).getY()]);
     }
 
     @Test
     public void testGetEndPositions() {
         assertEquals(endPositions, track.getEndPositions());
-        assertEquals(3, track.getTrackLayout()[endPositions.get(0).x()][endPositions.get(0).y()]);
+        assertEquals(3, track.getTrackLayout()[endPositions.get(0).getX()][endPositions.get(0).getY()]);
     }
 }

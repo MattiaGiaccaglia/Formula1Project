@@ -40,7 +40,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a record-based implementation of the {@link RaceManager} interface.
  * Manages the race by starting the race, checking for race completion, and determining if the race is finished.
- * Utilizes a {@link GameEngine} to manage game logic, a {@link RaceDisplay} for visualizing the race, and a {@link Pane} as the display container.
  *
  * @param gameEngine the game engine managing the game logic
  * @param raceDisplay the display for visualizing the race

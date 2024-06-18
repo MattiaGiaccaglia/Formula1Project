@@ -38,7 +38,6 @@ public interface TrackOperation {
 
     /**
      * Checks if the specified positions are valid and if the tracks between them are passable.
-     * This involves checking both individual positions for validity and ensuring there are no obstructions between consecutive positions.
      *
      * @param mainPoint  the main position to check from
      * @param mainPoint1 the first subsequent position to check after the main position
@@ -58,7 +57,6 @@ public interface TrackOperation {
 
     /**
      * Calculates and returns a list of valid nearby positions to the specified position.
-     * This method considers all adjacent positions and filters out those that are invalid or obstructed.
      *
      * @param position the position to calculate nearby moves from
      * @return a list of {@link Position} representing valid nearby positions
@@ -67,7 +65,6 @@ public interface TrackOperation {
 
     /**
      * Checks if the specified position is valid within the track.
-     * A position is considered valid if it is within the track boundaries and not marked as an obstacle (0).
      *
      * @param position the position to check
      * @return true if the position is within the track limits and not marked as invalid, false otherwise

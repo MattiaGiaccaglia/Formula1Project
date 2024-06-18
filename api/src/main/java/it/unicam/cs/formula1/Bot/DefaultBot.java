@@ -60,8 +60,7 @@ public class DefaultBot implements Bot {
 
     @Override
     public void updatePosition(Position direction) {
-        this.previousMove = new Position(direction.x() - this.actualPosition.x(),
-                direction.y() - this.actualPosition.y());
+        this.previousMove = new Position(direction.getX() - this.actualPosition.getX(), direction.getY() - this.actualPosition.getY());
         this.actualPosition = direction;
     }
 
@@ -75,8 +74,7 @@ public class DefaultBot implements Bot {
             return;
         }
         Position newPosition = trackOperation.isValidAndPassable(mainPoint, nextMainPoint1, nextMainPoint2)
-                ? movement.accelerate(mainPoint, previousMove)
-                : movement.decelerate(mainPoint, previousMove);
+                ? movement.accelerate(actualPosition, previousMove) : movement.decelerate(actualPosition, previousMove);
         updatePosition(newPosition);
     }
     @Override
