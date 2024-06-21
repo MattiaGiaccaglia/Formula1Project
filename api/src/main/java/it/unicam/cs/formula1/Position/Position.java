@@ -26,7 +26,7 @@
 package it.unicam.cs.formula1.Position;
 
 /**
- * Immutable class representing a position with x and y coordinates.
+ * Record representing a position with x and y coordinates.
  */
 public record Position(int x, int y) {
 
@@ -35,7 +35,7 @@ public record Position(int x, int y) {
         if (this == obj)
             return true;
         if (obj instanceof Position other)
-            return this.x == other.x && this.y == other.y;
+            return this.x == other.getX() && this.y == other.getY();
         return false;
     }
 

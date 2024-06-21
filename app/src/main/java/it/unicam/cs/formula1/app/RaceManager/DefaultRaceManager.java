@@ -52,8 +52,9 @@ public record DefaultRaceManager(GameEngine gameEngine, RaceDisplay raceDisplay,
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         Runnable raceTask = () -> {
             gameEngine.updateRace();
+            gameEngine.displayStatus();
             Platform.runLater(() -> raceDisplay.updateBotPositions(root));
-            if (isRaceFinished()) {
+            if (gameEngine.isRaceOver()) {
                 scheduler.shutdown();
                 Platform.runLater(() -> checkRaceCompletion(gameEngine.getBots()));
             }
@@ -63,24 +64,13 @@ public record DefaultRaceManager(GameEngine gameEngine, RaceDisplay raceDisplay,
 
     @Override
     public void checkRaceCompletion(List<Bot> bots) {
-        if (bots.isEmpty()) {
+        if (gameEngine.allBotsEliminated()) {
             Platform.runLater(this::showAllBotsEliminatedDialog);
             return;
         }
-        for (Bot bot : bots)
-            if (gameEngine.getTrack().getEndPositions().contains(bot.getCurrentPosition())) {
-                Platform.runLater(() -> showRaceFinishedDialog(bot));
-                break;
-            }
+        if (gameEngine.isRaceOver())
+            Platform.runLater(() -> showRaceFinishedDialog(gameEngine().getWinner()));
     }
-
-    @Override
-    public boolean isRaceFinished() {
-        return gameEngine.getBots().stream()
-                .anyMatch(defaultBot -> gameEngine.getTrack().getEndPositions().contains(defaultBot.getCurrentPosition()))
-                || gameEngine.getBots().isEmpty();
-    }
-
     /**
      * Displays a dialog indicating which bot has won the race.
      *

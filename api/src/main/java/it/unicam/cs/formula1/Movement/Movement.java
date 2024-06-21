@@ -59,4 +59,14 @@ public interface Movement {
      * @return the new main point position
      */
     Position calculateMainPoint(Position actualPosition, Position previousMove);
+
+    /**
+     * Increase the speed
+     */
+    void increaseSpeed();
+
+    /**
+     * Decrease the speed
+     */
+    void decreaseSpeed();
 }

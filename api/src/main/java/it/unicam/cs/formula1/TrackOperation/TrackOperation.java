@@ -47,7 +47,7 @@ public interface TrackOperation {
     boolean isValidAndPassable(Position mainPoint, Position mainPoint1, Position mainPoint2);
 
     /**
-     * Checks if a track between two positions is passable by stepping through the path and validating each intermediate position.
+     * Checks if a track between two positions is passable.
      *
      * @param start  the starting position
      * @param arrive the ending position
@@ -64,7 +64,7 @@ public interface TrackOperation {
     List<Position> calculateNearbyMoves(Position position);
 
     /**
-     * Checks if the specified position is valid within the track.
+     * Checks if the specified position is valid within the track
      *
      * @param position the position to check
      * @return true if the position is within the track limits and not marked as invalid, false otherwise
@@ -72,8 +72,8 @@ public interface TrackOperation {
     boolean isValidPosition(Position position);
 
     /**
-     * Executes a nearby move for the specified bot if the main point is not valid or if the bot is unable to move directly to a valid position.
-     * If no valid moves are available, the bot is eliminated.
+     * Executes a nearby move for the specified bot if the main point is not valid or if the bot is
+     * unable to move directly to a valid position
      *
      * @param bot the bot for which execute the nearby move
      */

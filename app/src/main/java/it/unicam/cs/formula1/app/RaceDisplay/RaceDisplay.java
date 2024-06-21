@@ -71,8 +71,8 @@ public interface RaceDisplay {
      * Creates a rectangle representing a grid cell with the specified value at the given coordinates.
      *
      * @param cellValue the value of the grid cell
-     * @param x the getX-coordinate of the grid cel
-     * @param y the getY-coordinate of the grid cell
+     * @param x the x coordinate of the grid cel
+     * @param y the y coordinate of the grid cell
      * @return a rectangle representing the grid cell
      */
     Rectangle createRectangleForGrid(int cellValue, int x, int y);

@@ -35,9 +35,12 @@ import it.unicam.cs.formula1.GameEngine.GameEngine;
 import it.unicam.cs.formula1.Track.TrackException;
 import java.io.IOException;
 
+/**
+ * Main class for the console race simulation
+ */
 public class Main {
     public static void main(String[] args) throws IOException, TrackException, BotException {
-        GameEngine gameEngine = new DefaultGameEngine("TrackRace.json");
+        GameEngine gameEngine = new DefaultGameEngine("buildSrc/TrackRace.json");
         gameEngine.startRace();
     }
 }

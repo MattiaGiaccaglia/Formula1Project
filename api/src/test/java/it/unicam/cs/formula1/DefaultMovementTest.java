@@ -43,25 +43,25 @@ class DefaultMovementTest {
     @Test
     public void testAccelerate() {
         Position actualPosition = new Position(4,0);
-        Position previousMove = new Position(1, 0);
+        Position previousMove = new Position(3, 0);
         Position result = movement.accelerate(actualPosition, previousMove);
-        assertEquals(new Position(6,0), result);
+        assertEquals(new Position(8,0), result);
     }
 
     @Test
     public void testDecelerate() {
         Position actualPosition = new Position(4, 0);
-        Position previousMove = new Position(1, 0);
+        Position previousMove = new Position(3, 0);
         movement.setSpeed(2);
         Position result = movement.decelerate(actualPosition, previousMove);
-        assertEquals(new Position(5,0), result);
+        assertEquals(new Position(6,0), result);
     }
 
     @Test
     public void testCalculateMainPoint() {
         Position actualPosition = new Position(2, 2);
-        Position previousMove = new Position(1, 1);
+        Position previousMove = new Position(1, 2);
         Position result = movement.calculateMainPoint(actualPosition, previousMove);
-        assertEquals(new Position(3,3), result);
+        assertEquals(new Position(3,4), result);
     }
 }

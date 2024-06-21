@@ -45,8 +45,7 @@ public class DefaultRaceDisplay implements RaceDisplay {
     private final Map<Bot, Circle> botCircles;
 
     /**
-     * Constructor for DefaultRaceDisplay.
-     * Initializes the map to track each bot associated Circle for visualization.
+     * Constructor for DefaultRaceDisplay, initializes the map to track each bot associated Circle for visualization.
      *
      * @param gameEngine the game engine managing the race logic
      */

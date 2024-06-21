@@ -34,6 +34,7 @@ import java.util.List;
  * Provides methods to retrieve the track layout, get start and end positions.
  */
 public interface Track {
+
     /**
      * Returns the layout of the track as a 2D array.
      *
@@ -44,14 +45,14 @@ public interface Track {
     /**
      * Returns the list of start positions on the track.
      *
-     * @return a list of start positions
+     * @return list of start positions
      */
     List<Position> getStartPositions();
 
     /**
      * Returns the list of end positions on the track.
      *
-     * @return a list of end positions
+     * @return list of end positions
      */
     List<Position> getEndPositions();
 }

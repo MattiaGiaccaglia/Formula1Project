@@ -48,6 +48,7 @@ public class DefaultGameEngine implements GameEngine {
     private final List<Bot> bots;
     private final Set<Position> finishPositions;
     private int turn;
+    private Bot winner;
 
     /**
      * Constructs a new DefaultGameEngine with the specified file path.
@@ -62,7 +63,8 @@ public class DefaultGameEngine implements GameEngine {
         this.track = TrackFactory.loadTrackFromConfig(filePath);
         this.bots = BotFactory.createBotsFromConfig(filePath, track);
         this.finishPositions = new HashSet<>(track.getEndPositions());
-        this.turn = 0;
+        this.turn = 1;
+        this.winner = null;
     }
 
     @Override
@@ -70,7 +72,7 @@ public class DefaultGameEngine implements GameEngine {
         System.out.println("Race started!");
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         Runnable raceTask = () -> {
-            if (isRaceOver())
+            if (isRaceOver() || allBotsEliminated())
                 scheduler.shutdown();
             else {
                 updateRace();
@@ -82,15 +84,20 @@ public class DefaultGameEngine implements GameEngine {
 
     @Override
     public Boolean isRaceOver(){
-        if (bots.isEmpty()) {
-            System.out.println("All bots have been eliminated. The race is over.");
-            return true;
-        }
         Optional<Bot> winningBot = bots.stream()
                 .filter(bot -> finishPositions.contains(bot.getCurrentPosition()))
                 .findFirst();
         if (winningBot.isPresent()) {
-            System.out.println("Bot " + winningBot.get().getName() + " won the race!");
+            this.winner = winningBot.get();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean allBotsEliminated(){
+        if (bots.isEmpty()){
+            System.out.println("All bots have been eliminated. The race is over.");
             return true;
         }
         return false;
@@ -114,6 +121,12 @@ public class DefaultGameEngine implements GameEngine {
         System.out.println("\nTurn number: " + turn++);
         for (Bot bot : bots)
             System.out.println("Bot " + bot.getName() + ", is in position: " + bot.getCurrentPosition());
+    }
+
+    @Override
+    public Bot getWinner(){
+        System.out.println("Bot " + winner.getName() + " won the race!");
+        return winner;
     }
 
     @Override

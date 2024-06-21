@@ -74,7 +74,7 @@ class DefaultRaceDisplayTest {
     }
 
     @Test
-    void displayTrack() {
+    void testDisplayTrack() {
         raceDisplay.displayTrack(root);
         assertEquals(9, root.getChildren().size());
         Rectangle rectangle = (Rectangle) root.getChildren().get(0);

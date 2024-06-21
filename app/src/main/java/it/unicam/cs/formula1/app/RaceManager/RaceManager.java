@@ -31,28 +31,20 @@ import java.util.List;
 
 /**
  * Interface representing the manager for the race.
- * Provides methods to start the race, check for race completion, and determine if the race is finished.
+ * Provides methods to start the race and check for race completion.
  */
 public interface RaceManager {
 
     /**
      * Starts and manages the race process, updating the race state periodically and checking for completion.
-     * Schedules and executes race updates and display refreshes at fixed intervals
      */
     void startRace();
 
     /**
-     * Checks if the race is completed by evaluating the positions of the bots.
-     * Displays a dialog if a bot has reached the finish position or if all bots are eliminated.
+     * Checks if the race is completed by evaluating the positions of the bots using gameEngine
      *
      * @param bots the list of bots participating in the race
      */
     void checkRaceCompletion(List<Bot> bots);
 
-    /**
-     * Determines if the race is finished.
-     *
-     * @return true if the race is finished, false otherwise
-     */
-    boolean isRaceFinished();
 }

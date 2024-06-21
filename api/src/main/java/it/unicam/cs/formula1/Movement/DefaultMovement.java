@@ -32,7 +32,7 @@ import it.unicam.cs.formula1.Position.Position;
  * Provides methods to accelerate, decelerate, and calculate the main point for movement.
  */
 public class DefaultMovement implements Movement {
-    private static final int MAX_SPEED = 4;
+    private static final int MAX_SPEED = 3;
     private int speed;
 
     /**
@@ -43,22 +43,19 @@ public class DefaultMovement implements Movement {
     }
 
     @Override
-    public Position accelerate(Position actualPosition, Position previousMove) {
-        Position mainPoint = calculateMainPoint(actualPosition, previousMove);
+    public Position accelerate(Position mainPoint, Position previousMove) {
         if (speed < MAX_SPEED) {
-            speed++;
-            return new Position(mainPoint.x() + Integer.signum(previousMove.x()), mainPoint.y() + Integer.signum(previousMove.y()));
+            increaseSpeed();
+            return new Position(mainPoint.getX() + Integer.signum(previousMove.getX()), mainPoint.getY() + Integer.signum(previousMove.getY()));
         }
         return mainPoint;
     }
 
     @Override
-    public Position decelerate(Position actualPosition, Position previousMove) {
-        Position mainPoint = calculateMainPoint(actualPosition, previousMove);
+    public Position decelerate(Position mainPoint, Position previousMove) {
         if (speed > 1) {
-            speed--;
-            Position position = new Position(mainPoint.x() - Integer.signum(previousMove.x()), mainPoint.y() - Integer.signum(previousMove.y()));
-            if(!position.equals(actualPosition)) return position;
+            decreaseSpeed();
+            return new Position(mainPoint.getX() - Integer.signum(previousMove.getX()), mainPoint.getY() - Integer.signum(previousMove.getY()));
         }
         return mainPoint;
     }
@@ -68,7 +65,13 @@ public class DefaultMovement implements Movement {
         return new Position(actualPosition.getX() + previousMove.getX(), actualPosition.getY() + previousMove.getY());
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    @Override
+    public void increaseSpeed() {
+        this.speed +=1;
+    }
+
+    @Override
+    public void decreaseSpeed() {
+        this.speed -=1;
     }
 }

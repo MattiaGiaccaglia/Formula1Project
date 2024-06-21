@@ -74,7 +74,7 @@ public class DefaultBot implements Bot {
             return;
         }
         Position newPosition = trackOperation.isValidAndPassable(mainPoint, nextMainPoint1, nextMainPoint2)
-                ? movement.accelerate(actualPosition, previousMove) : movement.decelerate(actualPosition, previousMove);
+                ? movement.accelerate(mainPoint, previousMove) : movement.decelerate(mainPoint, previousMove);
         updatePosition(newPosition);
     }
     @Override
@@ -106,5 +106,4 @@ public class DefaultBot implements Bot {
     public boolean getEliminated() {
         return eliminated;
     }
-
 }

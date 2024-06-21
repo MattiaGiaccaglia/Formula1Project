@@ -48,30 +48,46 @@ public record DefaultTrackOperation(Track track) implements TrackOperation {
                 checkPassableTrack(mainPoint1, mainPoint2);
     }
 
+    /**
+     * This method uses Bresenham's line algorithm to determine the passability of the track.
+     */
     @Override
     public boolean checkPassableTrack(Position start, Position arrive) {
-        int dx = Math.abs(arrive.getX() - start.getX()), dy = Math.abs(arrive.getY() - start.getY());
-        int steps = Math.max(dx, dy);
-        for (int i = 1; i <= steps; i++) {
-            int intermediateX = start.getX() + i * Integer.signum(arrive.getX() - start.getX());
-            int intermediateY = start.getY() + i * Integer.signum(arrive.getY() - start.getY());
-            if (!isValidPosition(new Position(intermediateX, intermediateY)))
+        int dx = Math.abs(arrive.getX() - start.getX());
+        int dy = -Math.abs(arrive.getY() - start.getY());
+        int sx = Integer.signum(arrive.getX() - start.getX());
+        int sy = Integer.signum(arrive.getY() - start.getY());
+        int err = dx + dy;
+        int x = start.getX();
+        int y = start.getY();
+        while (true) {
+            if (!isValidPosition(new Position(x, y)))
                 return false;
+            if (x == arrive.getX() && y == arrive.getY())
+                return true;
+            int e2 = 2 * err;
+            if (e2 >= dy) {
+                err += dy;
+                x += sx;
+            }
+            if (e2 <= dx) {
+                err += dx;
+                y += sy;
+            }
         }
-        return true;
     }
 
     @Override
     public List<Position> calculateNearbyMoves(Position position) {
-        List<Position> mosseVicine = new ArrayList<>();
+        List<Position> nearbyMoves = new ArrayList<>();
         for (int dx = -1; dx <= 1; dx++)
             for (int dy = -1; dy <= 1; dy++)
                 if (dx != 0 || dy != 0) {
                     Position newPoint = new Position(position.getX() + dx, position.getY() + dy);
                     if (isValidPosition(newPoint))
-                        mosseVicine.add(newPoint);
+                        nearbyMoves.add(newPoint);
                 }
-        return mosseVicine;
+        return nearbyMoves;
     }
 
     @Override
@@ -85,7 +101,8 @@ public record DefaultTrackOperation(Track track) implements TrackOperation {
     @Override
     public void executeNearbyMove(Bot bot) {
         Position currentPosition = bot.getCurrentPosition();
-        Position mainPoint = bot.getMovement().calculateMainPoint(currentPosition, bot.getPreviousMove());
+        Position previousMove = bot.getPreviousMove();
+        Position mainPoint = bot.getMovement().calculateMainPoint(currentPosition, previousMove);
         List<Position> validMoves = calculateNearbyMoves(mainPoint).stream()
                 .filter(move -> !move.equals(currentPosition))
                 .filter(calculateNearbyMoves(currentPosition)::contains)
@@ -94,11 +111,7 @@ public record DefaultTrackOperation(Track track) implements TrackOperation {
             bot.isEliminated(true);
             return;
         }
+        bot.getMovement().decelerate(mainPoint, previousMove);
         bot.updatePosition(validMoves.get(new Random().nextInt(validMoves.size())));
-    }
-
-    @Override
-    public Track track() {
-        return track;
     }
 }

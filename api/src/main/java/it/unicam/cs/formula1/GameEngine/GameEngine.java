@@ -49,6 +49,13 @@ public interface GameEngine {
     Boolean isRaceOver();
 
     /**
+     * Checks that all the bots in the competition have been eliminated.
+     *
+     * @return true if all bots have been eliminated, false otherwise
+     */
+    boolean allBotsEliminated();
+
+    /**
      * Updates the race status, typically by calculating the next moves for all bots.
      * ALso eliminates bots that have crashed during the race.
      */
@@ -58,6 +65,13 @@ public interface GameEngine {
      * Displays the current status of the race, including the positions of all bots.
      */
     void displayStatus();
+
+    /**
+     * Return the winning bot of the race
+     *
+     * @return the winning bot
+     */
+    Bot getWinner();
 
     /**
      * Returns the track on which the game is being played.

@@ -43,7 +43,6 @@ public class TrackFactory {
 
     /**
      * Loads a track configuration from a specified file and creates a DefaultTrack object.
-     * This method handles the process of reading the file, parsing the JSON content, and validating the necessary data.
      *
      * @param filePath the path to the track configuration file
      * @return a new DefaultTrack instance representing the loaded track
@@ -109,7 +108,6 @@ public class TrackFactory {
 
     /**
      * Validates that the list of start and end positions are not empty.
-     * Throws an exception if either list is empty, indicating incomplete or invalid track data.
      *
      * @param startPositions the list of start positions on the track
      * @param endPositions the list of end positions on the track
