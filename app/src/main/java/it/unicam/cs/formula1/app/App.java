@@ -69,7 +69,6 @@ public class App extends Application {
         root.getChildren().add(racePane);
 
         GameEngine gameEngine = new DefaultGameEngine("../buildSrc/TrackRace.json");
-
         RaceDisplay raceDisplay = new DefaultRaceDisplay(gameEngine);
         RaceManager raceManager = new DefaultRaceManager(gameEngine, raceDisplay, racePane);
         raceDisplay.displayTrack(racePane);

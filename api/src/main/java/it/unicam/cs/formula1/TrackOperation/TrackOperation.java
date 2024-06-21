@@ -48,6 +48,7 @@ public interface TrackOperation {
 
     /**
      * Checks if a track between two positions is passable.
+     * This method uses Bresenham's line algorithm to determine the passability of the track.
      *
      * @param start  the starting position
      * @param arrive the ending position

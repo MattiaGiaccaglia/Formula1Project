@@ -1,0 +1,11 @@
+unnamed package
+it.unicam.cs.formula1
+it.unicam.cs.formula1.app
+it.unicam.cs.formula1.app.RaceDisplay
+it.unicam.cs.formula1.app.RaceManager
+it.unicam.cs.formula1.Bot
+it.unicam.cs.formula1.GameEngine
+it.unicam.cs.formula1.Movement
+it.unicam.cs.formula1.Position
+it.unicam.cs.formula1.Track
+it.unicam.cs.formula1.TrackOperation

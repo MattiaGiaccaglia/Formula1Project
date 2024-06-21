@@ -48,9 +48,6 @@ public record DefaultTrackOperation(Track track) implements TrackOperation {
                 checkPassableTrack(mainPoint1, mainPoint2);
     }
 
-    /**
-     * This method uses Bresenham's line algorithm to determine the passability of the track.
-     */
     @Override
     public boolean checkPassableTrack(Position start, Position arrive) {
         int dx = Math.abs(arrive.getX() - start.getX());
@@ -79,14 +76,14 @@ public record DefaultTrackOperation(Track track) implements TrackOperation {
 
     @Override
     public List<Position> calculateNearbyMoves(Position position) {
-        List<Position> nearbyMoves = new ArrayList<>();
+        List<Position> nearbyMoves = new ArrayList<>(8);
         for (int dx = -1; dx <= 1; dx++)
-            for (int dy = -1; dy <= 1; dy++)
-                if (dx != 0 || dy != 0) {
+            for (int dy = -1; dy <= 1; dy++){
                     Position newPoint = new Position(position.getX() + dx, position.getY() + dy);
                     if (isValidPosition(newPoint))
                         nearbyMoves.add(newPoint);
                 }
+        nearbyMoves.remove(position);
         return nearbyMoves;
     }
 
@@ -101,17 +98,15 @@ public record DefaultTrackOperation(Track track) implements TrackOperation {
     @Override
     public void executeNearbyMove(Bot bot) {
         Position currentPosition = bot.getCurrentPosition();
-        Position previousMove = bot.getPreviousMove();
-        Position mainPoint = bot.getMovement().calculateMainPoint(currentPosition, previousMove);
+        Position mainPoint = bot.getMovement().calculateMainPoint(currentPosition, bot.getPreviousMove());
         List<Position> validMoves = calculateNearbyMoves(mainPoint).stream()
-                .filter(move -> !move.equals(currentPosition))
-                .filter(calculateNearbyMoves(currentPosition)::contains)
+                .filter(move -> !move.equals(currentPosition) && calculateNearbyMoves(currentPosition).contains(move))
                 .toList();
-        if (validMoves.isEmpty()) {
+        if (validMoves.isEmpty())
             bot.isEliminated(true);
-            return;
+        else {
+            bot.getMovement().decelerate(mainPoint, bot.getPreviousMove());
+            bot.updatePosition(validMoves.get(new Random().nextInt(validMoves.size())));
         }
-        bot.getMovement().decelerate(mainPoint, previousMove);
-        bot.updatePosition(validMoves.get(new Random().nextInt(validMoves.size())));
     }
 }
