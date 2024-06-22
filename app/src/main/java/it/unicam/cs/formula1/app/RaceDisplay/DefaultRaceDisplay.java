@@ -82,14 +82,14 @@ public class DefaultRaceDisplay implements RaceDisplay {
     @Override
     public Rectangle createRectangleForGrid(int cellValue, int x, int y) {
         Rectangle rectangle = new Rectangle(x * 20, y * 20, 20, 20);
-        rectangle.setFill(cellValue == 0 ? Color.BLACK :
-                (cellValue == 1 ? Color.WHITE : (cellValue == 2 ? Color.GREEN : Color.RED)));
+        rectangle.setFill(cellValue == 0 ? Color.BLACK : (cellValue == 1 ? Color.WHITE : (cellValue == 2 ? Color.GREEN : Color.RED)));
         return rectangle;
     }
 
     @Override
     public Circle createCircleForBot(Bot bot) {
-        return new Circle(bot.getCurrentPosition().getY() * 20 + 10, bot.getCurrentPosition().getX() * 20 + 10, 10, Color.BLUE);
+        return new Circle(bot.getCurrentPosition().getY() * 20 + 10,
+                bot.getCurrentPosition().getX() * 20 + 10, 10, Color.BLUE);
     }
 
     @Override

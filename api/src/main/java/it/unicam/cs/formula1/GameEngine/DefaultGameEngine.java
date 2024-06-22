@@ -120,7 +120,7 @@ public class DefaultGameEngine implements GameEngine {
     public void displayStatus() {
         System.out.println("\nTurn number: " + turn++);
         for (Bot bot : bots)
-            System.out.println("Bot " + bot.getName() + ", is in position: " + bot.getCurrentPosition());
+            System.out.println("Bot " + bot.getName() + ", is in position: " + bot.getCurrentPosition().toString());
     }
 
     @Override

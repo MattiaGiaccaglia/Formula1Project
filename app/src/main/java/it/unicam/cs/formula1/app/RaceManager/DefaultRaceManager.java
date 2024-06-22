@@ -64,11 +64,9 @@ public record DefaultRaceManager(GameEngine gameEngine, RaceDisplay raceDisplay,
 
     @Override
     public void checkRaceCompletion(List<Bot> bots) {
-        if (gameEngine.allBotsEliminated()) {
+        if (gameEngine.allBotsEliminated())
             Platform.runLater(this::showAllBotsEliminatedDialog);
-            return;
-        }
-        if (gameEngine.isRaceOver())
+        else if (gameEngine.isRaceOver())
             Platform.runLater(() -> showRaceFinishedDialog(gameEngine().getWinner()));
     }
     /**

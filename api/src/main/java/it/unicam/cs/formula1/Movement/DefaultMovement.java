@@ -69,7 +69,6 @@ public class DefaultMovement implements Movement {
     public void increaseSpeed() {
         this.speed +=1;
     }
-
     @Override
     public void decreaseSpeed() {
         this.speed -=1;
@@ -77,7 +76,6 @@ public class DefaultMovement implements Movement {
     public int getSpeed() {
         return speed;
     }
-
     public void setSpeed(int speed) {
         this.speed = speed;
     }

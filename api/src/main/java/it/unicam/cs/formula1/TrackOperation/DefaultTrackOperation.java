@@ -40,6 +40,18 @@ import java.util.Random;
  * @param track The track on which operations are performed.
  */
 public record DefaultTrackOperation(Track track) implements TrackOperation {
+    private static int[][] trackLayout;
+
+    /**
+     * Constructs a new DefaultTrackOperation with the specified track.
+     * Initializes the track layout from the provided track.
+     *
+     * @param track the track on which operations are performed
+     */
+    public DefaultTrackOperation(Track track) {
+        this.track = track;
+        trackLayout = track.getTrackLayout();
+    }
 
     @Override
     public boolean isValidAndPassable(Position mainPoint, Position mainPoint1, Position mainPoint2) {
@@ -91,7 +103,6 @@ public record DefaultTrackOperation(Track track) implements TrackOperation {
     public boolean isValidPosition(Position position) {
         int x = position.getX();
         int y = position.getY();
-        int[][] trackLayout = track.getTrackLayout();
         return x >= 0 && y >= 0 && x < trackLayout.length && y < trackLayout[x].length && trackLayout[x][y] != 0;
     }
 

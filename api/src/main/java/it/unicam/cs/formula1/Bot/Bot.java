@@ -30,7 +30,6 @@ import it.unicam.cs.formula1.Position.Position;
 
 /**
  * Represents a bot in the game.
- * Provides methods to update the bots position, calculate its next moves, and retrieve its current position and name.
  */
 public interface Bot {
 
